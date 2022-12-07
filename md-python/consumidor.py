@@ -5,8 +5,6 @@ import mysql.connector
 from productor import enviarMensaje
 from settings import settings
 
-
-
 class ListenerArticulos(stomp.ConnectionListener):
     def on_error(self, message):
         print('error "%s"' % message.body)
@@ -15,12 +13,22 @@ class ListenerArticulos(stomp.ConnectionListener):
         lista_articulos = message.body
         validarArticulos(lista_articulos)
 
-class ListenerConfirmacion(stomp.ConnectionListener):
+class ListenerConfirmacion(stomp.ConnectionListener): 
+    def __init__(self):
+        global confirmacion
+        confirmacion = False
+        
     def on_error(self, message):
         print('error "%s"' % message.body)
+
     def on_message(self, message):
-        print('confirmacion recibida con exito "%s' % message.body)
+        global confirmacion
         confirmacion = True
+        print('confirmacion recibida con exito "%s' % message.body)
+
+    def on_disconnected(self):
+        print('disconnected')
+        
 
 def recibirMensaje():
     hosts = [(settings.MYSQL_HOST, settings.ACTIVEMQ_PORT)]
@@ -31,9 +39,6 @@ def recibirMensaje():
     time.sleep(int(settings.TIEMPO_ESPERA) + 5)
     # print("DESCONECTANDO...")
     
-    
-
-
 def validarArticulos(lista):
     lista_articulos = json.loads(lista)
     print("Validando lista de artículos")
@@ -83,17 +88,19 @@ def reservar(lista_articulos):
         hours = int (x / 3600)
         print(f"{hours:02}:{minutes:02}:{seconds:02}")
         time.sleep(1)
+        print(confirmacion)
         if confirmacion == True:
             print("CONFIRMACION DE LA COMPRA")
             mensaje = 'Enviando mensaje al módulo de Facturación'
+            print(mensaje)
             enviarMensaje('facturacion', mensaje)
             break
     
-    print("NO SE REALIZO LA CONFIRMACION DE LA COMPRA")
-
-    for codigo in lista_articulos:
-        cur.execute("UPDATE articulos SET cantidad = cantidad + {}  WHERE (codigo = {})".format(lista_articulos[codigo], codigo))
-        cnn.commit()
+    if confirmacion == False:
+        print("NO SE REALIZO LA CONFIRMACION DE LA COMPRA")
+        for codigo in lista_articulos:
+            cur.execute("UPDATE articulos SET cantidad = cantidad + {}  WHERE (codigo = {})".format(lista_articulos[codigo], codigo))
+            cnn.commit()
 
 if __name__ == '__main__':
     confirmacion = False
