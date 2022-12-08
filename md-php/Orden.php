@@ -30,47 +30,34 @@ class Orden{
 
     public function ListaProductos():array{
       $this->lista_productos=array(array(
-          'codigo' => '7613035724518',
-          'nombre' => 'Paneton Donofrio bolsa',
-          'imagen' => '',
-          'precio' => 25.50,
-          'cantidad'=> 5
+          'codigo' => '1000',
+          'nombre' => 'TÉMPERA X 7 FABER CASTELL',
+          'precio' => 8.4,
+          'cantidad'=> 800,
+          'marca'=>'FABER CASTELL'
       ),
       array(
-          'codigo' => '7751271021579',
-          'nombre' => 'Leche Gloria 400 gr',
-          'imagen' => '',
-          'precio' => 4.20,
-          'cantidad'=> 5
+          'codigo' => '1001',
+          'nombre' => 'PLUMÓN N° 45 X 20  FABER-CASTEL',
+          'precio' => 18.4,
+          'cantidad'=> 100,
+          'marca'=>'FABER CASTELL'
       ),
       array(
-          'codigo' => '7750151012447',
-          'nombre' => 'Queso Cheddar Laive 170 gr',
-          'imagen' => '',
-          'precio' => 5.30,
-          'cantidad'=> 5
+          'codigo' => '1002',
+          'nombre' => 'BOLÍGRAFO PILOT BL-G1-7 PLATA',
+          'precio' => 4.7,
+          'cantidad'=> 88,
+          'marca'=>'PILOT'
       ),
       array(
-          'codigo' => '7750151005548',
-          'nombre' => 'Yougurt Gloria Fresa 340 ml',
-          'imagen' => '',
-          'precio' => 12.50,
-          'cantidad'=> 5
+          'codigo' => '1003',
+          'nombre' => 'TIJERA 7 1/2 PULGADAS',
+          'precio' => 11.6,
+          'cantidad'=> 100,
+          'marca'=>'WEX',
       ),
-      array(
-          'codigo' => '7750151003902',
-          'nombre' => 'Mermelada Fanny 1k',
-          'imagen' => '',
-          'precio' => 61.50,
-          'cantidad'=> 5
-      ),
-      array(
-          'codigo' => '7750243069946',
-          'nombre' => 'Detergente Bolivar 3.8 kg',
-          'imagen' => '',
-          'precio' => 35.80,
-          'cantidad'=> 5
-      ));
+    );
 
       return $this->lista_productos;
   }
