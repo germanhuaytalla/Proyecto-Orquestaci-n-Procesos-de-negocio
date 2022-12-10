@@ -42,9 +42,10 @@ def recibirMensaje():
 def validarArticulos(lista):
     lista_articulos = json.loads(lista)
     print("Validando lista de artículos")
-    cnn = mysql.connector.connect(host="localhost", user="root", passwd="admin", database="fisi_tiendasutiles")
+    cnn = mysql.connector.connect(host="localhost", user="root", passwd="", database="fisi_tiendasutiles")
     cur = cnn.cursor()
     i = 0
+    print(lista_articulos)
     for codigo in lista_articulos:
         # print(codigo)
         cur.execute("SELECT cantidad FROM articulos where codigo = {}".format(codigo))
@@ -68,7 +69,7 @@ def validarArticulos(lista):
                 break
 
 def reservar(lista_articulos):
-    cnn = mysql.connector.connect(host="localhost", user="root", passwd="admin", database="fisi_tiendasutiles")
+    cnn = mysql.connector.connect(host="localhost", user="root", passwd="", database="fisi_tiendasutiles")
     cur = cnn.cursor()
     for codigo in lista_articulos:
         cur.execute("UPDATE articulos SET cantidad = cantidad - {}  WHERE (codigo = {})".format(lista_articulos[codigo], codigo))
