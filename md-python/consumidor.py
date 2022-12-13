@@ -47,7 +47,7 @@ def validarArticulos(lista):
     i = 0
     print(lista_articulos)
     for codigo in lista_articulos:
-        # print(codigo)
+        print(codigo)
         cur.execute("SELECT cantidad FROM articulos where codigo = {}".format(codigo))
         stock = cur.fetchall()
         stock = stock[0]

@@ -1,11 +1,10 @@
-<?php
-require __DIR__ . '/../vendor/autoload.php';
+<?php 
 
 use Stomp\Client;
 use Stomp\Network\Connection;
 use Stomp\StatefulStomp;
 
-class ConnectMD
+class ConnectMiddleware
 {
   
   public function connect()
@@ -16,8 +15,3 @@ class ConnectMD
     return $stomp;
   }
 }
-
-$obj=new ConnectMD();
-$stomp=$obj->connect();
-
-?>

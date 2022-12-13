@@ -1,21 +1,19 @@
 <?php 
 
-include_once("connectDB.php");
+include_once("connectDatabase.php");
 
 class ModelOrders{
   
   public function getProductos($conn){
-    $query = pg_query($conn, "SELECT * FROM articulos ");
-    // $lista_productos=pg_fetch_all($query); 
-    $lista_productos = ['1000' => 5, '1003' => 1];
-    // var_dump($lista_productos);
-
+    // $query_lista = pg_query($conn, "SELECT codigo,nombre,precio,marca FROM carrito");
+    // var_dump(pg_fetch_all($query_lista));
+    // $lista_productos=pg_fetch_all($query_lista); 
+    $query_lista = ['1000' => 5, '1003' => 1];
+    $lista_productos=json_encode($query_lista,true);
+    
     return $lista_productos;
   }
 
 }
-
-$model=new ModelOrders();
-$lista_productos=$model->getProductos($conn);
 
 ?>

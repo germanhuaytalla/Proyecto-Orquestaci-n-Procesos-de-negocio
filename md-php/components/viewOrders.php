@@ -1,5 +1,5 @@
 <?php
-include_once("connectDB.php");
+include_once("connectDatabase.php");
 
 if (isset($_POST['agregar_carrito'])) {
   $codigo = $_POST['p_codigo'];

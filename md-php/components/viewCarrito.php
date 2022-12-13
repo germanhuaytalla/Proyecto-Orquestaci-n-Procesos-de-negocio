@@ -1,5 +1,8 @@
 <?php
-include_once("connectDB.php");
+include_once("connectDatabase.php");
+include_once("connectMiddleware.php");
+include_once("modelOrders.php");
+include_once("producer.php");
 
 
 if (isset($_POST['actualizar_carrito'])) {
@@ -19,16 +22,33 @@ if (isset($_GET['delete'])) {
   pg_query($conn, "DELETE FROM carrito WHERE codigo='$delete_id'");
 }
 
+//Enviar mensaje al proceso de Inventario de productos
 if (isset($_POST['enviar'])) {
-
   $select_productos = pg_query($conn, "SELECT * FROM carrito");
   if (pg_fetch_assoc($select_productos) > 0) {
-    pg_query($conn, "DELETE FROM carrito");
-    echo "<script>
-    alert('Lista enviado');
-    window.location='viewOrders.php';
-    </script>";
-  }else{
+
+    // $model=new ModelOrders();
+    // $lista_productos=$model->getProductos($conn);
+    $lista_productos = ['1000' => 5, '1003' => 1];
+    $conn_md = new ConnectMiddleware();
+    $stomp = $conn_md->connect();
+    $producer = new Producer();
+    $producer->enviarMensaje($stomp, 'ordenes/lista_articulos', $lista_productos);
+
+    if (!$producer) {
+      sleep(2);
+      echo "<script>
+      alert('El mensaje no se envió correctamente');
+      window.location='viewCarrito.php';
+      </script>";
+    } else {
+      pg_query($conn, "DELETE FROM carrito");
+      echo "<script>
+      alert('Se envió el mensaje correctamente');
+      window.location='viewOrders.php';
+      </script>";
+    }
+  } else {
     echo "<script>
     alert('No hay elementos en el carrito');
     window.location='viewCarrito.php';
