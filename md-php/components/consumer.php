@@ -1,24 +1,43 @@
 <?php
 
-  use Stomp\Transport\Message;
+require __DIR__ . '/../vendor/autoload.php';
+include_once("connectDatabase.php");
+include_once("connectMiddleware.php");
 
-  include_once("connectDB.php");
-  include_once("connect.php");
 
-  
-  function recibirMensaje($topic,$stomp){
-    $stomp->subscribe($topic,null,'auto',array('client-id'=>'clientname','subscription-type'=>'MULTICAST','durable-subscription-name'=>'articulos'));
-    $mensaje=$stomp->read();
-    if($mensaje!=null){
-      echo "Mensaje recibido: ".$mensaje->body;
-      $stomp->ack($mensaje);  // mark the message as received in the queue
-    }else{
+function recibirMensaje($topic, $stomp)
+{
+  $stomp->subscribe(
+    $topic,
+    null,
+    'auto',
+    array(
+      "message-id"=>"id","priority"=>9
+    )
+  );
+
+  //Listener
+  while(true){
+    $mensaje = $stomp->read();
+    if ($mensaje !=null) {
+      $msj=json_decode($mensaje->body,true);
+      echo "Mensaje recibido: ";
+      echo "<pre>";
+      var_dump($mensaje);
+      echo "</pre>";
+      var_dump($msj);
+      break;
+      // $stomp->ack($mensaje);
+    } else {
       echo "Fallo al recibir un mensaje\n";
-     
+      break;
     }
-    $stomp->unsubscribe();
   }
-  
-  recibirMensaje('/ordenes/lista_articulos',$stomp);
+  $stomp->unsubscribe();
+}
 
-?>
+$conn_md = new ConnectMiddleware();
+$stomp = $conn_md->connect();
+recibirMensaje('ordenes/lista_articulos', $stomp);
+
+
