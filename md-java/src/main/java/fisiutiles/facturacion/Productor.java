@@ -1,31 +1,32 @@
 package fisiutiles.facturacion;
 
+import com.google.gson.Gson;
 import java.util.Properties;
-import javax.jms.Connection;
 import javax.jms.Session;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
 import javax.jms.TextMessage;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
-public class Consumidor/* implements Runnable*/ {
+
+public class Productor {
     
     public static void main(String[] args) {
-        new Consumidor().consumirMensaje();
+        new Productor().enviarMensajeCuentasPorCobrar("mensajito");
     }
-
+    
     private Properties myProperties;
     
-    public Consumidor() {
+    public Productor() {
         this.myProperties = new PropertiesReader().getProperties();
     }
     
-    public void consumirMensaje() {
+    public void enviarMensajeCuentasPorCobrar(String mensaje) {
         try {
             ConnectionFactory myConnectionFactory = new ActiveMQConnectionFactory(myProperties.getProperty("URL"));
             Connection myConnection = myConnectionFactory.createConnection();
@@ -34,16 +35,17 @@ public class Consumidor/* implements Runnable*/ {
             
             Session mySession = myConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             
-            Destination myDestination = mySession.createQueue(myProperties.getProperty("SUBJECT"));
+            Destination myDestination = mySession.createTopic(myProperties.getProperty("TOPIC_TO"));
             
-            MessageConsumer myReceiver = mySession.createConsumer(myDestination);
+            // Destination myDestination = mySession.createQueue(myProperties.getProperty("TOPIC"));
             
-            Message myMessage = myReceiver.receive();
+            MessageProducer myProducer = mySession.createProducer(myDestination);
+
+            TextMessage myMessage = mySession.createTextMessage(mensaje);
             
-            if (myMessage instanceof TextMessage) {
-                TextMessage textMessage = (TextMessage) myMessage;
-                System.out.println("Receiver message: " + textMessage.getText());
-            }
+            myProducer.send(myMessage);
+            
+            System.out.println("PRODUCTOR: " + myMessage.getText());
             
             myConnection.close();
         } catch (JMSException ex) {
@@ -51,3 +53,5 @@ public class Consumidor/* implements Runnable*/ {
         }
     }
 }
+
+// https://www.codeusingjava.com/boot/active
