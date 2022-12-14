@@ -45,4 +45,9 @@ public class Item {
     public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" + "descripcion=" + descripcion + ", cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + ", subTotal=" + subTotal + '}';
+    }
 }

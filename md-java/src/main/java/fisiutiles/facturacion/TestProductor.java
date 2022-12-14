@@ -1,6 +1,8 @@
 package fisiutiles.facturacion;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.jms.Session;
@@ -30,10 +32,22 @@ public class TestProductor {
         // Factura fac = new Factura(11, "19200038", "juan", "ruc495", items, 153.4, 15.6);
         Factura fac = new Factura(22, "14266484", "paco", "ruc511", items, 133.4, 25.6);
         
-        Gson gson = new Gson();
-        String str = gson.toJson(fac);
+        /*for (int i = 0; i < items.size(); i++) {
+            System.out.println(items.get(i));
+        }*/
         
-        new TestProductor().enviarMensajeFacturacion(str);
+        Gson gson = new Gson();
+        String str = gson.toJson(items);
+        
+        System.out.println(items);
+
+        System.out.println(str);
+        
+        Type type = new TypeToken<ArrayList<Item>>(){}.getType();
+        ArrayList<Item> x = gson.fromJson(str, type);
+        System.out.println(x);
+        
+        // new TestProductor().enviarMensajeFacturacion(str);
     }
     
     private Properties myProperties;
@@ -71,3 +85,5 @@ public class TestProductor {
 }
 
 // https://www.codeusingjava.com/boot/active
+// https://stackoverflow.com/questions/38636254/how-to-convert-json-to-java-object-using-gson
+// https://simplesolution.dev/java-convert-json-file-to-java-object-using-gson/

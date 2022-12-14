@@ -11,6 +11,10 @@ public class Factura {
     private ArrayList<Item> items;
     private double totalIGV;
     private double totalFactura;
+    
+    public Factura() {
+        
+    }
 
     public Factura(int numeroDeFactura, String codigoDeCliente, String nombreDeCliente, String rucDeCliente, ArrayList<Item> items, double totalIGV, double totalFactura) {
         this.numeroDeFactura = numeroDeFactura;
@@ -76,5 +80,10 @@ public class Factura {
 
     public void setTotalFactura(double totalFactura) {
         this.totalFactura = totalFactura;
+    }
+
+    @Override
+    public String toString() {
+        return "Factura{" + "numeroDeFactura=" + numeroDeFactura + ", codigoDeCliente=" + codigoDeCliente + ", nombreDeCliente=" + nombreDeCliente + ", rucDeCliente=" + rucDeCliente + ", items=" + items + ", totalIGV=" + totalIGV + ", totalFactura=" + totalFactura + '}';
     }
 }

@@ -1,6 +1,5 @@
 package fisiutiles.facturacion;
 
-import com.google.gson.Gson;
 import java.util.Properties;
 import javax.jms.Session;
 import java.util.logging.Level;
@@ -37,8 +36,6 @@ public class Productor {
             
             Destination myDestination = mySession.createTopic(myProperties.getProperty("TOPIC_TO"));
             
-            // Destination myDestination = mySession.createQueue(myProperties.getProperty("TOPIC"));
-            
             MessageProducer myProducer = mySession.createProducer(myDestination);
 
             TextMessage myMessage = mySession.createTextMessage(mensaje);
@@ -55,3 +52,4 @@ public class Productor {
 }
 
 // https://www.codeusingjava.com/boot/active
+// https://mariadb.com/resources/blog/how-to-connect-java-applications-to-mariadb-using-jdbc/
