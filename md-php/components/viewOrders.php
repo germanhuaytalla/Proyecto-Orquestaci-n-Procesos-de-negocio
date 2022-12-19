@@ -8,7 +8,7 @@ if (isset($_POST['agregar_carrito'])) {
   $precio = $_POST['p_precio'];
   $marca = $_POST['p_marca'];
 
-  $verificar_carrito = pg_query($conn, "SELECT * FROM carrito WHERE codigo='$codigo'");
+  $verificar_carrito = pg_query($conn, "SELECT * FROM ordenes WHERE codigo='$codigo'");
 
   if (pg_num_rows($verificar_carrito) > 0) {
     echo "<script>
@@ -16,7 +16,7 @@ if (isset($_POST['agregar_carrito'])) {
     window.location='viewOrders.php';
     </script>";
   } else {
-    $insert__products = pg_query($conn, "INSERT INTO carrito(codigo,nombre,precio,cantidad,marca) VALUES('$codigo','$nombre','$precio','$cantidad','$marca')");
+    $insert__products = pg_query($conn, "INSERT INTO ordenes(codigo,nombre,precio,cantidad,marca) VALUES('$codigo','$nombre','$precio','$cantidad','$marca')");
     echo "<script>
     alert('Producto agregado al carrito');
     window.location='viewOrders.php';
@@ -61,7 +61,10 @@ if (isset($_POST['consulta_carrito'])) {
       if (pg_num_rows($select_products)) {
         while ($row = pg_fetch_assoc($select_products)) {
       ?>
-          <form class="relative w-[25rem] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" action="" method="POST">
+          <form 
+          class="relative w-[25rem] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" 
+          action="" 
+          method="POST">
             <img src="<?php echo $row['imagen'] ?>" alt="libro1">
             <div class="text-center"><?php echo $row['codigo'] ?></div>
             <div class="absolute left-0 top-0 flex items-center justify-center w-16 h-10 bg-[#0123E7] rounded-lg text-white">s/. <?php echo $row['precio'] ?></div>
@@ -85,7 +88,7 @@ if (isset($_POST['consulta_carrito'])) {
     </div>
     <div class="fixed right-10 bottom-10 bg-[#0123E7] text-white px-5 py-8 rounded-full  hover:scale-[0.9]">
       <?php
-      $select_products = pg_query($conn, "SELECT * FROM carrito");
+      $select_products = pg_query($conn, "SELECT * FROM ordenes");
 
       ?>
       <form class="" action="viewCarrito.php" method="POST">

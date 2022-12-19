@@ -36,8 +36,8 @@ function recibirMensaje($topic, $stomp)
   $stomp->unsubscribe();
 }
 
-$conn_md = new ConnectMiddleware();
-$stomp = $conn_md->connect();
-recibirMensaje('ordenes/lista_articulos', $stomp);
+// $conn_md = new ConnectMiddleware();
+// $stomp = $conn_md->connect();
+// recibirMensaje('ordenes/lista_articulos', $stomp);
 
 

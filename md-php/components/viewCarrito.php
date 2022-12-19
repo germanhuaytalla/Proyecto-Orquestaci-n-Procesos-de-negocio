@@ -3,13 +3,14 @@ include_once("connectDatabase.php");
 include_once("connectMiddleware.php");
 include_once("modelOrders.php");
 include_once("producer.php");
+include_once("consumer.php");
 
 
 if (isset($_POST['actualizar_carrito'])) {
   $actualizar_id = $_POST['p_codigo'];
   $cantidad = $_POST['p_cantidad'];
 
-  pg_query($conn, "UPDATE carrito SET cantidad='$cantidad' WHERE codigo='$actualizar_id'");
+  pg_query($conn, "UPDATE ordenes SET cantidad='$cantidad' WHERE codigo='$actualizar_id'");
   echo "<script>
   alert('Cantidad actualizada');
   window.location='viewCarrito.php';
@@ -19,17 +20,17 @@ if (isset($_POST['actualizar_carrito'])) {
 if (isset($_GET['delete'])) {
   $delete_id = $_GET['delete'];
 
-  pg_query($conn, "DELETE FROM carrito WHERE codigo='$delete_id'");
+  pg_query($conn, "DELETE FROM ordenes WHERE codigo='$delete_id'");
 }
 
 //Enviar mensaje al proceso de Inventario de productos
 if (isset($_POST['enviar'])) {
-  $select_productos = pg_query($conn, "SELECT * FROM carrito");
+  $select_productos = pg_query($conn, "SELECT * FROM ordenes");
   if (pg_fetch_assoc($select_productos) > 0) {
 
     // $model=new ModelOrders();
     // $lista_productos=$model->getProductos($conn);
-    $lista_productos = ['1000' => 5, '1003' => 1];
+    $lista_productos = ['1002' => 3, '1003' => 3];
     $conn_md = new ConnectMiddleware();
     $stomp = $conn_md->connect();
     $producer = new Producer();
@@ -42,10 +43,11 @@ if (isset($_POST['enviar'])) {
       window.location='viewCarrito.php';
       </script>";
     } else {
-      pg_query($conn, "DELETE FROM carrito");
+      sleep(2);
+      pg_query($conn, "DELETE FROM ordenes");
       echo "<script>
       alert('Se envió el mensaje correctamente');
-      window.location='viewOrders.php';
+      window.location='viewConfirmacion.php';
       </script>";
     }
   } else {
@@ -86,7 +88,7 @@ if (isset($_POST['enviar'])) {
         <?php
         $total = 0;
 
-        $select_products = pg_query($conn, "SELECT * FROM carrito");
+        $select_products = pg_query($conn, "SELECT * FROM ordenes");
         if (pg_num_rows($select_products)) {
           while ($row = pg_fetch_assoc($select_products)) {
         ?>
