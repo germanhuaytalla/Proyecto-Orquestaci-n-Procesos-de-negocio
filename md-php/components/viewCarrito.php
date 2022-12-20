@@ -23,7 +23,7 @@ if (isset($_GET['delete'])) {
   pg_query($conn, "DELETE FROM ordenes WHERE codigo='$delete_id'");
 }
 
-//Enviar mensaje al proceso de Inventario de productos
+
 if (isset($_POST['enviar'])) {
   $select_productos = pg_query($conn, "SELECT * FROM ordenes");
   if (pg_fetch_assoc($select_productos) > 0) {
@@ -31,6 +31,8 @@ if (isset($_POST['enviar'])) {
     // $model=new ModelOrders();
     // $lista_productos=$model->getProductos($conn);
     $lista_productos = ['1002' => 3, '1003' => 3];
+
+    //Enviar mensaje al proceso de Inventario de productos
     $conn_md = new ConnectMiddleware();
     $stomp = $conn_md->connect();
     $producer = new Producer();
@@ -46,16 +48,12 @@ if (isset($_POST['enviar'])) {
       sleep(2);
       pg_query($conn, "DELETE FROM ordenes");
 
-            
+      //Esperar la el mensaje "consulta" de confirmación
       $conn_md = new ConnectMiddleware();
       $stomp = $conn_md->connect();
       $consumer=new Consumer();
       $consumer->recibirMensaje('ordenes/consulta', $stomp,'viewConfirmacion');
             
-      // echo "<script>
-      // alert('Se envió el mensaje correctamente');
-      // window.location='viewConfirmacion.php';
-      // </script>";
     }
   } else {
     echo "<script>

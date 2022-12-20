@@ -7,6 +7,7 @@ include_once("consumer.php");
 if (isset($_POST['aceptar'])) {
   $aceptar = $_POST['aceptar'];
 
+  //Enviar mensaje de "confirmación"
   $conn_md = new ConnectMiddleware();
   $stomp = $conn_md->connect();
   $producer = new Producer();
@@ -68,7 +69,6 @@ if (isset($_POST['cancelar'])) {
         value="Cancelar">
       </div>
     </form>
-    <!-- <img class="absolute top-5 left-[40%] 2xl:left-[45%]" src="https://i.postimg.cc/4dxctWXr/cropped-logo-fisi-3.webp" alt=""> -->
     <img class="w-full h-[100vh] relative object-cover opacity-80 -z-10" src="https://i.postimg.cc/rm2gBTFk/utiles-escolares-1024x576.jpg" alt="">
   </section>
 
