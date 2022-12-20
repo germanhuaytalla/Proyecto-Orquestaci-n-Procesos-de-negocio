@@ -45,10 +45,17 @@ if (isset($_POST['enviar'])) {
     } else {
       sleep(2);
       pg_query($conn, "DELETE FROM ordenes");
-      echo "<script>
-      alert('Se envió el mensaje correctamente');
-      window.location='viewConfirmacion.php';
-      </script>";
+
+            
+      $conn_md = new ConnectMiddleware();
+      $stomp = $conn_md->connect();
+      $consumer=new Consumer();
+      $consumer->recibirMensaje('ordenes/consulta', $stomp,'viewConfirmacion');
+            
+      // echo "<script>
+      // alert('Se envió el mensaje correctamente');
+      // window.location='viewConfirmacion.php';
+      // </script>";
     }
   } else {
     echo "<script>

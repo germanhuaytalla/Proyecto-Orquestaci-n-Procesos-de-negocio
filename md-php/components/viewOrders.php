@@ -4,7 +4,7 @@ include_once("connectDatabase.php");
 if (isset($_POST['agregar_carrito'])) {
   $codigo = $_POST['p_codigo'];
   $nombre = $_POST['p_nombre'];
-  -$cantidad = $_POST['p_cantidad'];
+  $cantidad = $_POST['p_cantidad'];
   $precio = $_POST['p_precio'];
   $marca = $_POST['p_marca'];
 
@@ -61,10 +61,7 @@ if (isset($_POST['consulta_carrito'])) {
       if (pg_num_rows($select_products)) {
         while ($row = pg_fetch_assoc($select_products)) {
       ?>
-          <form 
-          class="relative w-[25rem] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" 
-          action="" 
-          method="POST">
+          <form class="relative w-[25rem] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" action="" method="POST">
             <img src="<?php echo $row['imagen'] ?>" alt="libro1">
             <div class="text-center"><?php echo $row['codigo'] ?></div>
             <div class="absolute left-0 top-0 flex items-center justify-center w-16 h-10 bg-[#0123E7] rounded-lg text-white">s/. <?php echo $row['precio'] ?></div>
