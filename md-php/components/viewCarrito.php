@@ -58,7 +58,7 @@ if (isset($_POST['enviar'])) {
       </script>";
     } else {
       sleep(3);
-      pg_query($conn, "DELETE FROM orden");
+      // pg_query($conn, "DELETE FROM orden");
 
       // Esperar la el mensaje "consulta" de confirmación
       $conn_md = new ConnectMiddleware();

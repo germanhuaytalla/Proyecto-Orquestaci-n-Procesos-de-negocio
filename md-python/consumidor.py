@@ -116,3 +116,4 @@ conn.subscribe(destination=settings.TOPIC_FROM, id=123, ack='auto', headers = {'
 print("Esperando mensajes...")
 while 1:
     time.sleep(10)
+    break;
