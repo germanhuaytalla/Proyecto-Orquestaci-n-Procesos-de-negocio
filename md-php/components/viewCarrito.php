@@ -4,6 +4,7 @@ include_once("connectMiddleware.php");
 include_once("modelOrders.php");
 include_once("producer.php");
 include_once("consumer.php");
+include_once("config.php");
 
 
 if (isset($_POST['actualizar_carrito'])) {
@@ -47,23 +48,23 @@ if (isset($_POST['enviar'])) {
     $conn_md = new ConnectMiddleware();
     $stomp = $conn_md->connect();
     $producer = new Producer();
-    $producer->enviarMensaje($stomp, 'ordenes/lista_articulos', $mensaje);
+    $producer->enviarMensaje($stomp,constant('TOPIC_TO'), $mensaje);
 
     if (!$producer) {
-      sleep(2);
+      sleep(3);
       echo "<script>
       alert('El mensaje no se envió correctamente');
       window.location='viewCarrito.php';
       </script>";
     } else {
-      sleep(2);
-      // pg_query($conn, "DELETE FROM orden");
+      sleep(3);
+      pg_query($conn, "DELETE FROM orden");
 
-      //Esperar la el mensaje "consulta" de confirmación
-      // $conn_md = new ConnectMiddleware();
-      // $stomp = $conn_md->connect();
-      // $consumer=new Consumer();
-      // $consumer->recibirMensaje('ordenes/consulta', $stomp,'viewConfirmacion');
+      // Esperar la el mensaje "consulta" de confirmación
+      $conn_md = new ConnectMiddleware();
+      $stomp = $conn_md->connect();
+      $consumer=new Consumer();
+      $consumer->recibirMensaje(constant('TOPIC_FROM'), $stomp,'viewConfirmacion');
             
     }
   } else {

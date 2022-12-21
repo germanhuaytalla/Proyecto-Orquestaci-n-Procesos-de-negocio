@@ -2,6 +2,7 @@
 <?php 
 include_once("producer.php");
 include_once("consumer.php");
+include_once("config.php");
 
   
 if (isset($_POST['aceptar'])) {
@@ -11,7 +12,10 @@ if (isset($_POST['aceptar'])) {
   $conn_md = new ConnectMiddleware();
   $stomp = $conn_md->connect();
   $producer = new Producer();
-  $producer->enviarMensaje($stomp, 'ordenes/confirmacion','listo');
+
+  $array=["estado"=> 1, "mensaje"=> "Reserva confirmada"];
+  $mensaje=json_encode($array);
+  $producer->enviarMensaje($stomp,constant('TOPIC_TO'),$mensaje);
 
   if (!$producer) {
     echo "<script>
