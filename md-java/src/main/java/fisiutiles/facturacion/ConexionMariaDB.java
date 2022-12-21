@@ -27,14 +27,15 @@ public class ConexionMariaDB {
     }
 
     public void insert(Factura factura) {
-        try ( Connection con = (Connection) DriverManager.getConnection(url, user, password);  PreparedStatement stm = con.prepareStatement("INSERT INTO facturas VALUE(?,?,?,?,?,?,?)")) {
-            stm.setInt(1, factura.getNumeroDeFactura());
-            stm.setString(2, factura.getCodigoDeCliente());
-            stm.setString(3, factura.getNombreDeCliente());
-            stm.setString(4, factura.getRucDeCliente());
-            stm.setString(5, new Gson().toJson(factura.getItems()));
-            stm.setDouble(6, factura.getTotalIGV());
-            stm.setDouble(7, factura.getTotalFactura());
+        String sql = "INSERT INTO facturas (codigo_cliente, nombre_cliente, ruc_cliente, lista_items, total_igv, total_factura) VALUES (?,?,?,?,?,?)";
+        
+        try ( Connection con = (Connection) DriverManager.getConnection(url, user, password);  PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, factura.getCodigoDeCliente());
+            stm.setString(2, factura.getNombreDeCliente());
+            stm.setString(3, factura.getRucDeCliente());
+            stm.setString(4, new Gson().toJson(factura.getItems()));
+            stm.setDouble(5, factura.getTotalIGV());
+            stm.setDouble(6, factura.getTotalFactura());
             stm.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

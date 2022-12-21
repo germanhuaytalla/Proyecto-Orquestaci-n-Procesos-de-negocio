@@ -15,6 +15,10 @@ import javax.jms.TextMessage;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
 public class Consumidor implements Runnable {
+    
+    public static void main(String[] args) {
+        new Consumidor().consumirMensajeAdministracionDeInventarioYReserva();
+    }
 
     private Properties ps;
 
@@ -43,24 +47,31 @@ public class Consumidor implements Runnable {
                     json_msg = txt_msg.getText();
                 }
 
-                Mensaje msj = new Gson().fromJson(json_msg, Mensaje.class);
+                Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
                 
                 // start operar
+                Pedido objPedido = new Gson().fromJson(msjf.getContenido(), Pedido.class);
                 
-                int estado = msj.getEstado();
-                String contenido = msj.getContenido();
-                
-                
-                
+                Factura objFactura = new Factura();
+                objFactura.setCodigoDeCliente(objPedido.getCodigoDeCliente());
+                objFactura.setNombreDeCliente(objPedido.getNombreDeCliente());
+                objFactura.setRucDeCliente(objPedido.getRucDeCliente());
+                objFactura.setItems(objPedido.getItems());
                 // end operar
 
-                // insercion en bbdd
-                // creando mensaje
-                Mensaje myMessage = null;
+                // start insercion en bbdd
+                ConexionMariaDB db = new ConexionMariaDB();
+                db.insert(objFactura);
+                // end insercion en bbdd
+                
+                // start creando mensaje para modulo de cuentas x cobrar
+                Mensaje msjt = new Mensaje();
+                msjt.setEstado(0);
+                msjt.setContenido(new Gson().toJson(msjt));
 
                 // mandando mensaje al modulo de facturacion
-                Productor myProducer = new Productor();
-                myProducer.enviarMensajeCuentasPorCobrar(myMessage);
+                Productor prod = new Productor();
+                prod.enviarMensajeCuentasPorCobrar(msjt);
             } catch (JMSException ex) {
                 Logger.getLogger(Productor.class.getName()).log(Level.SEVERE, null, ex);
             }
