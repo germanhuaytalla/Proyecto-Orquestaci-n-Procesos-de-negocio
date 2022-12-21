@@ -21,20 +21,21 @@ public class ConexionMariaDB {
 
     public ConexionMariaDB() {
         this.props = new PropertiesReader().getProperties();
-        this.url = "jdbc:mariadb://" + props.getProperty("MYSQL_HOST") + ":3306/" + props.getProperty("MYSQL_DB");
-        this.user = props.getProperty("MYSQL_USER");
-        this.password = props.getProperty("MYSQL_PASSWORD");
+        this.url = "jdbc:mariadb://" + props.getProperty("MARIADB_HOST") + ":3306/" + props.getProperty("MARIADB_DB");
+        this.user = props.getProperty("MARIADB_USER");
+        this.password = props.getProperty("MARIADB_PASSWORD");
     }
 
     public void insert(Factura factura) {
-        try ( Connection con = (Connection) DriverManager.getConnection(url, user, password);  PreparedStatement stm = con.prepareStatement("INSERT INTO facturas VALUE(?,?,?,?,?,?,?)")) {
-            stm.setInt(1, factura.getNumeroDeFactura());
-            stm.setString(2, factura.getCodigoDeCliente());
-            stm.setString(3, factura.getNombreDeCliente());
-            stm.setString(4, factura.getRucDeCliente());
-            stm.setString(5, new Gson().toJson(factura.getItems()));
-            stm.setDouble(6, factura.getTotalIGV());
-            stm.setDouble(7, factura.getTotalFactura());
+        String sql = "INSERT INTO facturas (codigo_cliente, nombre_cliente, ruc_cliente, lista_items, total_igv, total_factura) VALUES (?,?,?,?,?,?)";
+        
+        try ( Connection con = (Connection) DriverManager.getConnection(url, user, password);  PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, factura.getCodigoDeCliente());
+            stm.setString(2, factura.getNombreDeCliente());
+            stm.setString(3, factura.getRucDeCliente());
+            stm.setString(4, new Gson().toJson(factura.getItems()));
+            stm.setDouble(5, factura.getTotalIGV());
+            stm.setDouble(6, factura.getTotalFactura());
             stm.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -53,33 +54,11 @@ public class ConexionMariaDB {
                 obj.setNombreDeCliente(rs.getString("nombre_cliente"));
                 obj.setRucDeCliente(rs.getString("ruc_cliente"));
                 obj.setItems(new Gson().fromJson(rs.getString("lista_items"), type));
-                obj.setTotalIGV(rs.getDouble("total_igv"));
-                obj.setTotalFactura(rs.getDouble("total_factura"));
                 System.out.println(obj);
             }
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        var bbdd = new ConexionMariaDB();
-
-        Item a = new Item("desc 1", 5, 41.2);
-        Item b = new Item("desc 2", 4, 13.7);
-        Item c = new Item("desc 3", 3, 8.5);
-
-        ArrayList<Item> items = new ArrayList<>();
-        items.add(a);
-        items.add(b);
-        items.add(c);
-
-        // Factura fac = new Factura(11, "19200038", "juan", "ruc495", items, 153.4, 15.6);
-        Factura fac = new Factura(22, "14266484", "paco", "ruc511", items, 133.4, 25.6);
-
-        // bbdd.insert(fac);
-        System.out.println(fac);
-        bbdd.select();
     }
 }

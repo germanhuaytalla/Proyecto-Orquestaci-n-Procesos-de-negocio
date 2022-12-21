@@ -1,5 +1,6 @@
 package fisiutiles.facturacion;
 
+import com.google.gson.Gson;
 import java.util.Properties;
 import javax.jms.Session;
 import java.util.logging.Level;
@@ -12,39 +13,31 @@ import javax.jms.MessageProducer;
 import javax.jms.TextMessage;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
-
 public class Productor {
-    
-    public static void main(String[] args) {
-        new Productor().enviarMensajeCuentasPorCobrar("mensajito");
-    }
-    
-    private Properties myProperties;
-    
-    public Productor() {
-        this.myProperties = new PropertiesReader().getProperties();
-    }
-    
-    public void enviarMensajeCuentasPorCobrar(String mensaje) {
-        try {
-            ConnectionFactory myConnectionFactory = new ActiveMQConnectionFactory(myProperties.getProperty("URL"));
-            Connection myConnection = myConnectionFactory.createConnection();
-            
-            myConnection.start();
-            
-            Session mySession = myConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            
-            Destination myDestination = mySession.createTopic(myProperties.getProperty("TOPIC_TO"));
-            
-            MessageProducer myProducer = mySession.createProducer(myDestination);
 
-            TextMessage myMessage = mySession.createTextMessage(mensaje);
-            
-            myProducer.send(myMessage);
-            
-            System.out.println("PRODUCTOR: " + myMessage.getText());
-            
-            myConnection.close();
+    private Properties ps;
+
+    public Productor() {
+        this.ps = new PropertiesReader().getProperties();
+    }
+
+    public void enviarMensajeCuentasPorCobrar(Mensaje msj) {
+        ConnectionFactory cf = new ActiveMQConnectionFactory(ps.getProperty("URL"));
+
+        try ( Connection con = cf.createConnection()) {
+            con.start();
+
+            Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            Destination dtn = ssn.createTopic(ps.getProperty("TOPIC_TO"));
+
+            MessageProducer mp = ssn.createProducer(dtn);
+
+            String json_msj = new Gson().toJson(msj);
+
+            TextMessage tm = ssn.createTextMessage(json_msj);
+
+            mp.send(tm);
         } catch (JMSException ex) {
             Logger.getLogger(Productor.class.getName()).log(Level.SEVERE, null, ex);
         }
