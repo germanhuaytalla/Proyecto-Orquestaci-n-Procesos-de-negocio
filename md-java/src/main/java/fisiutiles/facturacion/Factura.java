@@ -11,19 +11,15 @@ public class Factura {
     private ArrayList<Item> items;
     private double totalIGV;
     private double totalFactura;
-    
-    public Factura() {
-        
-    }
 
-    public Factura(int numeroDeFactura, String codigoDeCliente, String nombreDeCliente, String rucDeCliente, ArrayList<Item> items, double totalIGV, double totalFactura) {
-        this.numeroDeFactura = numeroDeFactura;
-        this.codigoDeCliente = codigoDeCliente;
-        this.nombreDeCliente = nombreDeCliente;
-        this.rucDeCliente = rucDeCliente;
-        this.items = items;
-        this.totalIGV = totalIGV;
-        this.totalFactura = totalFactura;
+    public Factura() {
+        this.numeroDeFactura = 0;
+        this.codigoDeCliente = "no hay informacion";
+        this.nombreDeCliente = "no hay informacion";
+        this.rucDeCliente = "no hay informacion";
+        this.items = new ArrayList<>();
+        this.totalIGV = 0.0;
+        this.totalFactura = 0.0;
     }
 
     public int getNumeroDeFactura() {
@@ -64,26 +60,31 @@ public class Factura {
 
     public void setItems(ArrayList<Item> items) {
         this.items = items;
+        double totalItems = calcularTotalItems();
+        this.totalIGV = totalItems * 0.18;
+        this.totalFactura = totalItems + this.totalIGV;
     }
 
     public double getTotalIGV() {
         return totalIGV;
     }
 
-    public void setTotalIGV(double totalIGV) {
-        this.totalIGV = totalIGV;
-    }
-
     public double getTotalFactura() {
         return totalFactura;
-    }
-
-    public void setTotalFactura(double totalFactura) {
-        this.totalFactura = totalFactura;
     }
 
     @Override
     public String toString() {
         return "Factura{" + "numeroDeFactura=" + numeroDeFactura + ", codigoDeCliente=" + codigoDeCliente + ", nombreDeCliente=" + nombreDeCliente + ", rucDeCliente=" + rucDeCliente + ", items=" + items + ", totalIGV=" + totalIGV + ", totalFactura=" + totalFactura + '}';
+    }
+
+    private double calcularTotalItems() {
+        double totalItems = 0.0;
+
+        for (Item item : this.items) {
+            totalItems += item.getSubTotal();
+        }
+
+        return totalItems;
     }
 }
