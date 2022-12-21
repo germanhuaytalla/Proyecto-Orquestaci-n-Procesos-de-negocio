@@ -10,7 +10,7 @@ if (isset($_POST['actualizar_carrito'])) {
   $actualizar_id = $_POST['p_codigo'];
   $cantidad = $_POST['p_cantidad'];
 
-  pg_query($conn, "UPDATE ordenes SET cantidad='$cantidad' WHERE codigo='$actualizar_id'");
+  pg_query($conn, "UPDATE orden SET cantidad='$cantidad' WHERE codigo='$actualizar_id'");
   echo "<script>
   alert('Cantidad actualizada');
   window.location='viewCarrito.php';
@@ -20,23 +20,34 @@ if (isset($_POST['actualizar_carrito'])) {
 if (isset($_GET['delete'])) {
   $delete_id = $_GET['delete'];
 
-  pg_query($conn, "DELETE FROM ordenes WHERE codigo='$delete_id'");
+  pg_query($conn, "DELETE FROM orden WHERE codigo='$delete_id'");
 }
 
 
 if (isset($_POST['enviar'])) {
-  $select_productos = pg_query($conn, "SELECT * FROM ordenes");
+  $select_productos = pg_query($conn, "SELECT * FROM orden");
   if (pg_fetch_assoc($select_productos) > 0) {
 
-    // $model=new ModelOrders();
-    // $lista_productos=$model->getProductos($conn);
-    $lista_productos = ['1002' => 3, '1003' => 3];
+    $model=new ModelOrders();
+    $lista_productos=$model->getProductos($conn);
+    $mensaje=[
+      "estado"=>"1",
+      "mensaje"=>[
+        "codigoDeCliente"=>"001",
+        "nombreDeCliente"=>"Germàn",
+        "rucDeCliente"=>"ruc001",
+        "items"=>$lista_productos 
+      ]
+    ];
+    // echo "<pre>";
+    // var_dump($mensaje);
+    // echo "</pre>";
 
     //Enviar mensaje al proceso de Inventario de productos
     $conn_md = new ConnectMiddleware();
     $stomp = $conn_md->connect();
     $producer = new Producer();
-    $producer->enviarMensaje($stomp, 'ordenes/lista_articulos', $lista_productos);
+    $producer->enviarMensaje($stomp, 'ordenes/lista_articulos', $mensaje);
 
     if (!$producer) {
       sleep(2);
@@ -46,13 +57,13 @@ if (isset($_POST['enviar'])) {
       </script>";
     } else {
       sleep(2);
-      pg_query($conn, "DELETE FROM ordenes");
+      // pg_query($conn, "DELETE FROM orden");
 
       //Esperar la el mensaje "consulta" de confirmación
-      $conn_md = new ConnectMiddleware();
-      $stomp = $conn_md->connect();
-      $consumer=new Consumer();
-      $consumer->recibirMensaje('ordenes/consulta', $stomp,'viewConfirmacion');
+      // $conn_md = new ConnectMiddleware();
+      // $stomp = $conn_md->connect();
+      // $consumer=new Consumer();
+      // $consumer->recibirMensaje('ordenes/consulta', $stomp,'viewConfirmacion');
             
     }
   } else {
@@ -93,7 +104,7 @@ if (isset($_POST['enviar'])) {
         <?php
         $total = 0;
 
-        $select_products = pg_query($conn, "SELECT * FROM ordenes");
+        $select_products = pg_query($conn, "SELECT * FROM orden");
         if (pg_num_rows($select_products)) {
           while ($row = pg_fetch_assoc($select_products)) {
         ?>
@@ -102,21 +113,19 @@ if (isset($_POST['enviar'])) {
                 <a class="fas fa-times p-2" href="<?php echo "viewCarrito.php"; ?>?delete=<?php echo $row['codigo']; ?>" onclick="return confirm('¿Borrar producto?')">
                 </a>
               </div>
-              <div class="text-center"><?php echo $row['codigo'] ?></div>
-              <div class=""><span class="font-semibold">Nombre:</span> <?php echo $row['nombre'] ?></div>
-              <div class=""><span class="font-semibold">Marca: </span><?php echo $row['marca'] ?></div>
-              <div class="text-center font-semibold ">s/. <?php echo $row['precio'] ?></div>
+              <div class="font-semibold pt-10"><span class="">Còdigo: </span><?php echo $row['codigo'] ?></div>
+              <div class=""><span class="font-semibold">Nombre:</span> <?php echo $row['descripcion'] ?></div>
+              <div class=""><span class="font-semibold">Precio Unitario:</span> s/. <?php echo $row['preciounitario'] ?></div>
 
               <input type="hidden" name="p_codigo" value="<?php echo $row['codigo'] ?>">
-              <input type="hidden" name="p_nombre" value="<?php echo $row['nombre'] ?>">
-              <input type="hidden" name="p_precio" value="<?php echo $row['precio'] ?>">
-              <input type="hidden" name="p_marca" value="<?php echo $row['marca'] ?>">
+              <input type="hidden" name="p_nombre" value="<?php echo $row['descripcion'] ?>">
+              <input type="hidden" name="p_precio" value="<?php echo $row['preciounitario'] ?>">
 
               <div class="flex flex-row  gap-4">
                 <input class="w-full border border-[#0123E7] px-2 rounded-lg" type="number" min="1" name="p_cantidad" value="<?php echo $row['cantidad'];  ?>">
                 <input class="w-full py-2 px-2 bg-[#847e7e] hover:bg-[#0123E7] transition duration-100 text-white rounded-lg" type="submit" name="actualizar_carrito" value="Actualizar carrito">
               </div>
-              <div class="text-center py-2 font-semibold">Sub total: s/.<span class="font-normal"><?php echo $sub_total = ($row['cantidad'] * $row["precio"]) ?></span></div>
+              <div class="text-center py-2 font-semibold">Sub total: s/.<span class="font-normal"><?php echo $sub_total = ($row['cantidad'] * $row["preciounitario"]) ?></span></div>
             </form>
         <?php
             $total += $sub_total;

@@ -6,9 +6,8 @@ if (isset($_POST['agregar_carrito'])) {
   $nombre = $_POST['p_nombre'];
   $cantidad = $_POST['p_cantidad'];
   $precio = $_POST['p_precio'];
-  $marca = $_POST['p_marca'];
 
-  $verificar_carrito = pg_query($conn, "SELECT * FROM ordenes WHERE codigo='$codigo'");
+  $verificar_carrito = pg_query($conn, "SELECT * FROM orden WHERE codigo='$codigo'");
 
   if (pg_num_rows($verificar_carrito) > 0) {
     echo "<script>
@@ -16,7 +15,7 @@ if (isset($_POST['agregar_carrito'])) {
     window.location='viewOrders.php';
     </script>";
   } else {
-    $insert__products = pg_query($conn, "INSERT INTO ordenes(codigo,nombre,precio,cantidad,marca) VALUES('$codigo','$nombre','$precio','$cantidad','$marca')");
+    $insert__products = pg_query($conn, "INSERT INTO orden(codigo,descripcion,precioUnitario,cantidad) VALUES('$codigo','$nombre','$precio','$cantidad')");
     echo "<script>
     alert('Producto agregado al carrito');
     window.location='viewOrders.php';
@@ -64,16 +63,14 @@ if (isset($_POST['consulta_carrito'])) {
           <form class="relative w-[25rem] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" action="" method="POST">
             <img src="<?php echo $row['imagen'] ?>" alt="libro1">
             <div class="text-center"><?php echo $row['codigo'] ?></div>
-            <div class="absolute left-0 top-0 flex items-center justify-center w-16 h-10 bg-[#0123E7] rounded-lg text-white">s/. <?php echo $row['precio'] ?></div>
-            <div class=""><span class="font-semibold">Nombre:</span> <?php echo $row['nombre'] ?></div>
-            <div class=""><span class="font-semibold">Marca: </span><?php echo $row['marca'] ?></div>
+            <div class="absolute left-0 top-0 flex items-center justify-center w-16 h-10 bg-[#0123E7] rounded-lg text-white">s/. <?php echo $row['precioUnitario'] ?></div>
+            <div class=""><span class="font-semibold">Nombre:</span> <?php echo $row['descripcion'] ?></div>
 
 
             <input type="hidden" name="p_codigo" value="<?php echo $row['codigo'] ?>">
             <input class="border border-[#0123E7] px-2 rounded-lg" type="number" min="1" name="p_cantidad" value="1">
-            <input type="hidden" name="p_nombre" value="<?php echo $row['nombre'] ?>">
-            <input type="hidden" name="p_precio" value="<?php echo $row['precio'] ?>">
-            <input type="hidden" name="p_marca" value="<?php echo $row['marca'] ?>">
+            <input type="hidden" name="p_nombre" value="<?php echo $row['descripcion'] ?>">
+            <input type="hidden" name="p_precio" value="<?php echo $row['precioUnitario'] ?>">
             <input class="flex items-center justify-center mx-auto w-32 py-2 px-4 bg-[#847e7e] hover:bg-[#0123E7] transition duration-100 text-white rounded-lg" type="submit" name="agregar_carrito" value="Agregar a carrito">
           </form>
       <?php
@@ -85,7 +82,7 @@ if (isset($_POST['consulta_carrito'])) {
     </div>
     <div class="fixed right-10 bottom-10 bg-[#0123E7] text-white px-5 py-8 rounded-full  hover:scale-[0.9]">
       <?php
-      $select_products = pg_query($conn, "SELECT * FROM ordenes");
+      $select_products = pg_query($conn, "SELECT * FROM orden");
 
       ?>
       <form class="" action="viewCarrito.php" method="POST">

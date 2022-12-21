@@ -16,6 +16,6 @@
   }
 
   $obj=new ConnectDB();
-  $conn=$obj->conectar_PostgreSQL(constant("user"),constant("password"),constant("host"),constant("dbname"));
+  $conn=$obj->conectar_PostgreSQL(constant("POSTGRESQL_USER"),constant("POSTGRESQL_PASSWORD"),constant("POSTGRESQL_HOST"),constant("POSTGRESQL_DB"));
 
 ?>
