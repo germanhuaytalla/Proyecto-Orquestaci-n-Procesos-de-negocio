@@ -7,11 +7,11 @@ public class Item {
     private double precioUnitario;
     private double subTotal;
 
-    public Item(String descripcion, int cantidad, double precioUnitario) {
-        this.descripcion = descripcion;
-        this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
-        this.subTotal = this.cantidad * this.precioUnitario;
+    public Item() {
+        this.descripcion = "no hay informacion";
+        this.cantidad = 0;
+        this.precioUnitario = 0.0;
+        this.subTotal = 0.0;
     }
 
     public String getDescripcion() {
@@ -28,6 +28,7 @@ public class Item {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+        this.subTotal = this.cantidad * this.precioUnitario;
     }
 
     public double getPrecioUnitario() {
@@ -36,14 +37,11 @@ public class Item {
 
     public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
+        this.subTotal = this.precioUnitario * this.cantidad;
     }
 
     public double getSubTotal() {
         return subTotal;
-    }
-
-    public void setSubTotal(double subTotal) {
-        this.subTotal = subTotal;
     }
 
     @Override
