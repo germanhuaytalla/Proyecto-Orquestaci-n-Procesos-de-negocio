@@ -29,6 +29,7 @@ class ListenerConfirmacion(stomp.ConnectionListener):
 
     def on_message(self, message):
         global confirmacion
+        print(message.body)
         datos = json.loads(message.body)
         confirmacion = int(datos['estado'])
         print('confirmacion recibida con exito "%s"' % message.body)
