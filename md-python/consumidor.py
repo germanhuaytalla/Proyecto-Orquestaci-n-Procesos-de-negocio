@@ -15,8 +15,9 @@ class ListenerArticulos(stomp.ConnectionListener):
     def on_message(self, message):
         print('lista de articulos recibida con exito "%s' % message.body)
         print(message.body)
-        validarArticulos(message.body)
         conn.disconnect()
+        validarArticulos(message.body)
+        
     
 class ListenerConfirmacion(stomp.ConnectionListener): 
     def __init__(self, conn):
@@ -40,13 +41,13 @@ def validarArticulos(mensaje):
     cur = cnn.cursor()
     i = 0
     for item in items:
-        print(item['codigo'])
+        # print(item['codigo'])
         cur.execute("SELECT cantidad FROM articulos where codigo = {}".format(item['codigo']))
         stock = cur.fetchall()
         if cur.rowcount == 0:
-            mensaje = 'El articulo {} no existe'.format(item['codigo'])
+            mensaje = '{"estado": 0, "mensaje": "El articulo ' + item['codigo'] + ' no existe"}'
             print(mensaje)
-            # se envía mensaje de error al módulo de órdenes
+            # Se envía mensaje de error al módulo de órdenes
             enviarMensaje(settings.TOPIC_TO_1, mensaje)
             break
         else:
@@ -55,18 +56,18 @@ def validarArticulos(mensaje):
                 i = i + 1
                 if i == len(items):
                     print("RESERVANDO ARTICULOS...")
-                    reservar(items)  
+                    reservar(items, mensaje)  
             else:
-                mensaje = 'No hay stock suficiente del articulo {}. Solo hay {} unidades'.format(item['codigo'], stock)
+                mensaje = '{"estado": 0, "mensaje": "No hay stock suficiente del articulo ' + item['codigo'] + '. Solo hay ' + str(stock) + ' unidades"}'
                 print(mensaje)
                 enviarMensaje(settings.TOPIC_TO_1, mensaje)
                 break
 
-def reservar(items):
+def reservar(items, message):
     cnn = mysql.connector.connect(host=settings.MYSQL_HOST, user=settings.MYSQL_USER, passwd=settings.MYSQL_PASSWORD, database=settings.MYSQL_DB)
     cur = cnn.cursor()
     for item in items:
-        cur.execute("UPDATE articulos SET cantidad = cantidad - {}  WHERE (codigo = {})".format(item['codigo'], item['cantidad']))
+        cur.execute("UPDATE articulos SET cantidad = cantidad - {}  WHERE (codigo = {})".format(item['cantidad'], item['codigo']))
         cnn.commit()
     
     # Solicitando confirmación del cliente en el módulo de procesamiento de órdenes
@@ -90,7 +91,7 @@ def reservar(items):
         print(confirmacion)
         if confirmacion == 1:
             print("CONFIRMACION DE LA COMPRA")
-            mensaje = 'Enviando mensaje al módulo de Facturación'
+            mensaje = '{"estado": 1, "mensaje": "' + message + '"}'
             print(mensaje)
             enviarMensaje(settings.TOPIC_TO_2, mensaje)
             break
@@ -98,7 +99,7 @@ def reservar(items):
     if confirmacion == 0:
         print("NO SE REALIZO LA CONFIRMACION DE LA COMPRA")
         for item in items:
-            cur.execute("UPDATE articulos SET cantidad = cantidad + {}  WHERE (codigo = {})".format(item['codigo'], item['cantidad']))
+            cur.execute("UPDATE articulos SET cantidad = cantidad + {}  WHERE (codigo = {})".format(item['cantidad'], item['codigo']))
             cnn.commit()
 
     conn.disconnect()

@@ -24,7 +24,7 @@ def listaProductos():
                     {
                         "codigo":"1002",
                         "descripcion":"desc 2",
-                        "cantidad":1000,
+                        "cantidad":3,
                         "precioUnitario":13.7,
                     },
                     {
