@@ -32,22 +32,22 @@ if (isset($_POST['enviar'])) {
     $model=new ModelOrders();
     $lista_productos=$model->getProductos($conn);
     $mensaje=[
-      "estado"=>"1",
-      "mensaje"=>[
+      "estado"=>1,
+      "contenido"=>[
         "codigoDeCliente"=>"001",
         "nombreDeCliente"=>"Germàn",
         "rucDeCliente"=>"ruc001",
         "items"=>$lista_productos 
       ]
     ];
-    // echo "<pre>";
-    // var_dump($mensaje);
-    // echo "</pre>";
+    
 
     //Enviar mensaje al proceso de Inventario de productos
     $conn_md = new ConnectMiddleware();
     $stomp = $conn_md->connect();
     $producer = new Producer();
+    $mensaje=json_encode($mensaje);
+
     $producer->enviarMensaje($stomp,constant('TOPIC_TO'), $mensaje);
 
     if (!$producer) {

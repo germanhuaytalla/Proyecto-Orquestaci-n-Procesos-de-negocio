@@ -13,10 +13,12 @@ class ListenerArticulos(stomp.ConnectionListener):
         print('error 1 "%s"' % message.body)
 
     def on_message(self, message):
-        print('lista de articulos recibida con exito "%s' % message.body)
         print(message.body)
+        # print('lista de articulos recibida con exito "%s' % message.body)
         conn.disconnect()
         validarArticulos(message.body)
+        
+        
         
     
 class ListenerConfirmacion(stomp.ConnectionListener): 
@@ -29,14 +31,15 @@ class ListenerConfirmacion(stomp.ConnectionListener):
 
     def on_message(self, message):
         global confirmacion
+        print(message.body)
         datos = json.loads(message.body)
-        confirmacion = int(datos['estado'])
+        confirmacion = datos['estado']
         print('confirmacion recibida con exito "%s"' % message.body)
         conn.disconnect()
 
 def validarArticulos(mensaje):
     datos = json.loads(mensaje)
-    items = datos['mensaje']['items']
+    items = datos['contenido']['items']
     print("Validando lista de artículos")
     cnn = mysql.connector.connect(host=settings.MYSQL_HOST, user=settings.MYSQL_USER, passwd=settings.MYSQL_PASSWORD, database=settings.MYSQL_DB)
     cur = cnn.cursor()
@@ -46,10 +49,13 @@ def validarArticulos(mensaje):
         cur.execute("SELECT cantidad FROM articulos where codigo = {}".format(item['codigo']))
         stock = cur.fetchall()
         if cur.rowcount == 0:
-            mensaje = '{"estado": 0, "mensaje": "El articulo ' + item['codigo'] + ' no existe"}'
+            mensaje = {
+                "estado": 0, 
+                "contenido": "El articulo " + item['codigo'] + " no existe."
+                }
             print(mensaje)
             # Se envía mensaje de error al módulo de órdenes
-            enviarMensaje(settings.TOPIC_TO_1, mensaje)
+            enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
             break
         else:
             stock = int(stock[0][0])
@@ -59,9 +65,12 @@ def validarArticulos(mensaje):
                     print("RESERVANDO ARTICULOS...")
                     reservar(items, mensaje)  
             else:
-                mensaje = '{"estado": 0, "mensaje": "No hay stock suficiente del articulo ' + item['codigo'] + '. Solo hay ' + str(stock) + ' unidades"}'
+                mensaje = {
+                    "estado": 0, 
+                    "contenido": "No hay stock suficiente del articulo " + item['codigo'] + ". Solo hay " + str(stock) + " unidades"
+                    }
                 print(mensaje)
-                enviarMensaje(settings.TOPIC_TO_1, mensaje)
+                enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
                 break
 
 def reservar(items, message):
@@ -73,8 +82,12 @@ def reservar(items, message):
     
     # Solicitando confirmación del cliente en el módulo de procesamiento de órdenes
     print("ESPERANDO CONFIRMACION")
-    mensaje = '{"estado": 1, "mensaje": "solicitando confirmacion"}'
-    enviarMensaje(settings.TOPIC_TO_1, mensaje)
+    mensaje = {
+        "estado": 1, 
+        "contenido": "Solicitando confirmacion"
+        }
+    
+    enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
 
     # Escuchando mensaje de confirmación
     hosts = [(settings.ACTIVEMQ_HOST, settings.ACTIVEMQ_PORT)]
@@ -93,9 +106,8 @@ def reservar(items, message):
         if confirmacion == 1:
             # Proceso terminado satisfactoriamente y enviando mensaje al módulo de facturación
             print("CONFIRMACION DE LA COMPRA")
-            mensaje = message
-            print(mensaje)
-            enviarMensaje(settings.TOPIC_TO_2, mensaje)
+            print(message)
+            enviarMensaje(settings.TOPIC_TO_2, message)
             break
 
     if confirmacion == 0:
@@ -115,5 +127,4 @@ conn.connect(wait=True, headers = {'client-id': 'fisi_utiles'} )
 conn.subscribe(destination=settings.TOPIC_FROM, id=123, ack='auto', headers = {'subscription-type': 'ANYCAST','durable-subscription-name':'inventario'})
 print("Esperando mensajes...")
 while 1:
-    time.sleep(10)
-    break;
+    time.sleep(30)
