@@ -7,7 +7,7 @@ package pruebas;
 import com.google.gson.Gson;
 import fisiutiles.facturacion.Item;
 import fisiutiles.facturacion.Mensaje;
-import fisiutiles.facturacion.Pedido;
+import fisiutiles.facturacion.Orden;
 import fisiutiles.facturacion.Productor;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -51,7 +51,7 @@ public class TProducer {
         lista.add(it2);
         lista.add(it3);
         
-        Pedido p = new Pedido();
+        Orden p = new Orden();
         p.setCodigoDeCliente("18200038");
         p.setNombreDeCliente("Machin Alberto");
         p.setRucDeCliente("ruc-555");
@@ -68,7 +68,7 @@ public class TProducer {
 
             Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            Destination dtn = ssn.createTopic("fisi_tiendautiles/mod_facturacion");
+            Destination dtn = ssn.createQueue("fisi_tiendautiles/mod_facturacion");
 
             MessageProducer mp = ssn.createProducer(dtn);
 

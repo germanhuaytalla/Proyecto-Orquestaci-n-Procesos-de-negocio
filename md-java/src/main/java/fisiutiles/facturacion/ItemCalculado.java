@@ -1,19 +1,19 @@
 package fisiutiles.facturacion;
 
-import com.google.gson.Gson;
-
-public class Item {
+public class ItemCalculado {
     
     private String codigo;
     private String descripcion;
     private int cantidad;
     private double precioUnitario;
+    private double subTotal;
 
-    public Item() {
+    public ItemCalculado() {
         this.codigo = "no hay informacion";
         this.descripcion = "no hay informacion";
         this.cantidad = 0;
         this.precioUnitario = 0.0;
+        this.subTotal = 0.0;
     }
 
     public String getCodigo() {
@@ -38,6 +38,7 @@ public class Item {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+        this.subTotal = cantidad * this.precioUnitario;
     }
 
     public double getPrecioUnitario() {
@@ -46,10 +47,10 @@ public class Item {
 
     public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
+        this.subTotal = precioUnitario * this.cantidad;
     }
 
-    @Override
-    public String toString() {
-        return "Item{" + "codigo=" + codigo + ", descripcion=" + descripcion + ", cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + '}';
+    public double getSubTotal() {
+        return subTotal;
     }
 }
