@@ -35,7 +35,7 @@ if (isset($_POST['enviar'])) {
       "estado"=>1,
       "contenido"=>[
         "codigoDeCliente"=>"001",
-        "nombreDeCliente"=>"Germàn",
+        "nombreDeCliente"=>"Germán",
         "rucDeCliente"=>"ruc001",
         "items"=>$lista_productos 
       ]
