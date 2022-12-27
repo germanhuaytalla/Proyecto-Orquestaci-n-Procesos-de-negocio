@@ -1,7 +1,5 @@
 package fisiutiles.facturacion;
 
-import com.google.gson.Gson;
-
 public class Item {
     
     private String codigo;

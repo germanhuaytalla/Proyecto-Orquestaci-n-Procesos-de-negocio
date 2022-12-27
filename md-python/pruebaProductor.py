@@ -7,10 +7,10 @@ def listaProductos():
     hosts = [(settings.MYSQL_HOST, settings.ACTIVEMQ_PORT)]
     conn = stomp.Connection(host_and_ports=hosts)
     conn.connect(wait=True)
-    message = json.dumps(
+    '''message = json.dumps(
         {   
             "estado":1,
-            "mensaje":{
+            "contenido":{
                 "codigoDeCliente":"14266484",
         	    "nombreDeCliente":"paco",
         	    "rucDeCliente":"ruc511",
@@ -42,8 +42,9 @@ def listaProductos():
                 ]
             }
         }
-    )
-    conn.send(destination = settings.TOPIC_FROM, body=message)
+    )'''
+    message = "camioneta"
+    conn.send(destination = settings.TOPIC_TO_2, body=message, headers = {'client-id': 'clientname', 'persistent': 'true'})
     print("Lista de artículos enviado al módulo de Administración de inventario y Reserva...")
     time.sleep(2)
     conn.disconnect()

@@ -17,9 +17,6 @@ class ListenerArticulos(stomp.ConnectionListener):
         # print('lista de articulos recibida con exito "%s' % message.body)
         conn.disconnect()
         validarArticulos(message.body)
-        
-        
-        
     
 class ListenerConfirmacion(stomp.ConnectionListener): 
     def __init__(self, conn):

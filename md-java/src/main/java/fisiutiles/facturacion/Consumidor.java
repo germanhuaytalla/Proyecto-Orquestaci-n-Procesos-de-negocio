@@ -1,20 +1,16 @@
 package fisiutiles.facturacion;
 
-import com.google.gson.Gson;
-import java.util.ArrayList;
 import java.util.Properties;
+
 import javax.jms.Connection;
-import javax.jms.Session;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.TextMessage;
+import javax.jms.Session;
+
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
-import org.json.JSONObject;
 
 public class Consumidor implements Runnable {
 
@@ -37,7 +33,7 @@ public class Consumidor implements Runnable {
             try ( Connection con = cf.createConnection()) {
                 con.start();
 
-                Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                Session ssn = con.createSession(Session.AUTO_ACKNOWLEDGE);
 
                 Destination dtn = ssn.createQueue(topic_from);
 
@@ -45,14 +41,16 @@ public class Consumidor implements Runnable {
 
                 Message msg = mc.receive();
 
+                System.out.println(msg);
+
                 String json_msg = null;
 
-                if (msg instanceof TextMessage txt_msg) {
+                /*if (msg instanceof TextMessage txt_msg) {
+                    System.out.println("ENTRAAAAAAAAAAAA");
                     json_msg = txt_msg.getText();
-                }
+                }*/
                 
-                Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
-                
+                //Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
                 
                 /*Orden objPedido = new Gson().fromJson(msjf.getContenido(), Orden.class);
                                 
@@ -88,7 +86,7 @@ public class Consumidor implements Runnable {
                 Productor prod = new Productor();
                 prod.enviarMensajeCuentasPorCobrar(msjt);*/
             } catch (JMSException ex) {
-                Logger.getLogger(Productor.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Esperando...1");
             }
         }
     }

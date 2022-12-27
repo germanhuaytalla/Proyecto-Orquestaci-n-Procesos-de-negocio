@@ -40,7 +40,9 @@ if (isset($_POST['enviar'])) {
         "items"=>$lista_productos 
       ]
     ];
-    
+    echo "<pre>";
+    var_dump($mensaje);
+    echo "</pre>";
 
     //Enviar mensaje al proceso de Inventario de productos
     $conn_md = new ConnectMiddleware();
@@ -116,17 +118,17 @@ if (isset($_POST['enviar'])) {
               </div>
               <div class="font-semibold pt-10"><span class="">Còdigo: </span><?php echo $row['codigo'] ?></div>
               <div class=""><span class="font-semibold">Nombre:</span> <?php echo $row['descripcion'] ?></div>
-              <div class=""><span class="font-semibold">Precio Unitario:</span> s/. <?php echo $row['preciounitario'] ?></div>
+              <div class=""><span class="font-semibold">Precio Unitario:</span> s/. <?php echo $row['precio_unitario'] ?></div>
 
               <input type="hidden" name="p_codigo" value="<?php echo $row['codigo'] ?>">
               <input type="hidden" name="p_nombre" value="<?php echo $row['descripcion'] ?>">
-              <input type="hidden" name="p_precio" value="<?php echo $row['preciounitario'] ?>">
+              <input type="hidden" name="p_precio" value="<?php echo $row['precio_unitario'] ?>">
 
               <div class="flex flex-row  gap-4">
                 <input class="w-full border border-[#0123E7] px-2 rounded-lg" type="number" min="1" name="p_cantidad" value="<?php echo $row['cantidad'];  ?>">
                 <input class="w-full py-2 px-2 bg-[#847e7e] hover:bg-[#0123E7] transition duration-100 text-white rounded-lg" type="submit" name="actualizar_carrito" value="Actualizar carrito">
               </div>
-              <div class="text-center py-2 font-semibold">Sub total: s/.<span class="font-normal"><?php echo $sub_total = ($row['cantidad'] * $row["preciounitario"]) ?></span></div>
+              <div class="text-center py-2 font-semibold">Sub total: s/.<span class="font-normal"><?php echo $sub_total = ($row['cantidad'] * $row["precio_unitario"]) ?></span></div>
             </form>
         <?php
             $total += $sub_total;
