@@ -75,7 +75,7 @@ def reservar(items, message):
     print("ESPERANDO CONFIRMACION")
     mensaje = '{"estado": 1, "mensaje": "solicitando confirmacion"}'
     enviarMensaje(settings.TOPIC_TO_1, mensaje)
-
+    
     # Escuchando mensaje de confirmación
     hosts = [(settings.ACTIVEMQ_HOST, settings.ACTIVEMQ_PORT)]
     conn = stomp.Connection(host_and_ports=hosts)

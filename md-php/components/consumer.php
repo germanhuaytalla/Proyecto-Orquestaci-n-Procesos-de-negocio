@@ -27,6 +27,9 @@ class Consumer{
         window.location='".$view.".php';
         </script>";
         break;
+      }else{
+        echo "No reception";
+        break;
       }
     }
     $stomp->unsubscribe();
