@@ -9,7 +9,6 @@ class Producer
 
   public function enviarMensaje($protocol, $topic, $mensaje)
   {
-    $mensaje = json_encode($mensaje, true);
     // var_dump($mensaje);
     $protocol->send($topic, new Message($mensaje));
 

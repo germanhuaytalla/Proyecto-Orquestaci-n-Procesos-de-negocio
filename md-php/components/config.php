@@ -1,5 +1,6 @@
 <?php 
   define("POSTGRESQL_HOST","localhost");
+  define("POSTGRESQL_PORT","5432");
   define("POSTGRESQL_DB","fisi_tiendautiles");
   define("POSTGRESQL_USER","postgres");
   define("POSTGRESQL_PASSWORD","admin");

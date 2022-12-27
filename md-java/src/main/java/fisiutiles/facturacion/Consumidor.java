@@ -1,21 +1,19 @@
 package fisiutiles.facturacion;
 
-import com.google.gson.Gson;
 import java.util.Properties;
+
 import javax.jms.Connection;
-import javax.jms.Session;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.TextMessage;
+import javax.jms.Session;
+
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 
 public class Consumidor implements Runnable {
-    
+
     public static void main(String[] args) {
         new Consumidor().consumirMensajeAdministracionDeInventarioYReserva();
     }
@@ -27,43 +25,58 @@ public class Consumidor implements Runnable {
     }
 
     private void consumirMensajeAdministracionDeInventarioYReserva() {
-        while (true) {
-            ConnectionFactory cf = new ActiveMQConnectionFactory(ps.getProperty("URL"));
+        String url = "tcp://" + ps.getProperty("ACTIVEMQ_HOST") + ":" + ps.getProperty("ACTIVEMQ_PORT");
+        String topic_from = ps.getProperty("TOPIC_FROM");
+        ConnectionFactory cf = new ActiveMQConnectionFactory(url);
 
+        while (true) {
             try ( Connection con = cf.createConnection()) {
                 con.start();
 
-                Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                Session ssn = con.createSession(Session.AUTO_ACKNOWLEDGE);
 
-                Destination dtn = ssn.createTopic(ps.getProperty("TOPIC_FROM"));
+                Destination dtn = ssn.createQueue(topic_from);
 
                 MessageConsumer mc = ssn.createConsumer(dtn);
 
                 Message msg = mc.receive();
 
+                System.out.println(msg);
+
                 String json_msg = null;
 
-                if (msg instanceof TextMessage txt_msg) {
+                /*if (msg instanceof TextMessage txt_msg) {
+                    System.out.println("ENTRAAAAAAAAAAAA");
                     json_msg = txt_msg.getText();
+                }*/
+                
+                //Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
+                
+                /*Orden objPedido = new Gson().fromJson(msjf.getContenido(), Orden.class);
+                                
+                ArrayList<ItemCalculado> items = new ArrayList<>();
+                
+                for (Item it : objPedido.getItems()) {
+                    ItemCalculado itc = new ItemCalculado();
+                    itc.setCodigo(it.getCodigo());
+                    itc.setDescripcion(it.getDescripcion());
+                    itc.setCantidad(it.getCantidad());
+                    itc.setPrecioUnitario(it.getPrecioUnitario());
+                    items.add(itc);
                 }
 
-                Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
-                
-                // start operar
-                Pedido objPedido = new Gson().fromJson(msjf.getContenido(), Pedido.class);
-                
                 Factura objFactura = new Factura();
                 objFactura.setCodigoDeCliente(objPedido.getCodigoDeCliente());
                 objFactura.setNombreDeCliente(objPedido.getNombreDeCliente());
                 objFactura.setRucDeCliente(objPedido.getRucDeCliente());
-                objFactura.setItems(objPedido.getItems());
+                objFactura.setItems(items);*/
                 // end operar
-
+/*
                 // start insercion en bbdd
                 ConexionMariaDB db = new ConexionMariaDB();
                 db.insert(objFactura);
                 // end insercion en bbdd
-                
+
                 // start creando mensaje para modulo de cuentas x cobrar
                 Mensaje msjt = new Mensaje();
                 msjt.setEstado(0);
@@ -71,9 +84,9 @@ public class Consumidor implements Runnable {
 
                 // mandando mensaje al modulo de facturacion
                 Productor prod = new Productor();
-                prod.enviarMensajeCuentasPorCobrar(msjt);
+                prod.enviarMensajeCuentasPorCobrar(msjt);*/
             } catch (JMSException ex) {
-                Logger.getLogger(Productor.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Esperando...1");
             }
         }
     }
@@ -83,7 +96,6 @@ public class Consumidor implements Runnable {
         this.consumirMensajeAdministracionDeInventarioYReserva();
     }
 }
-
 
 // https://www.codeusingjava.com/boot/active
 // https://stackoverflow.com/questions/38636254/how-to-convert-json-to-java-object-using-gson

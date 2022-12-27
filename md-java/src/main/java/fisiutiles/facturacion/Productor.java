@@ -22,14 +22,16 @@ public class Productor {
     }
 
     public void enviarMensajeCuentasPorCobrar(Mensaje msj) {
-        ConnectionFactory cf = new ActiveMQConnectionFactory(ps.getProperty("URL"));
+        String url = "tcp://" + ps.getProperty("ACTIVEMQ_HOST") + ":" + ps.getProperty("ACTIVEMQ_PORT");
+        String topic_to = ps.getProperty("TOPIC_TO");
+        ConnectionFactory cf = new ActiveMQConnectionFactory(url);
 
         try ( Connection con = cf.createConnection()) {
             con.start();
 
             Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            Destination dtn = ssn.createTopic(ps.getProperty("TOPIC_TO"));
+            Destination dtn = ssn.createTopic(topic_to);
 
             MessageProducer mp = ssn.createProducer(dtn);
 

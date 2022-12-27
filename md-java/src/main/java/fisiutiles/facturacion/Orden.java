@@ -2,17 +2,17 @@ package fisiutiles.facturacion;
 
 import java.util.ArrayList;
 
-public class Pedido {
+public class Orden {
     
     private String codigoDeCliente;
     private String nombreDeCliente;
     private String rucDeCliente;
     private ArrayList<Item> items;
 
-    public Pedido() {
+    public Orden() {
     }
 
-    public Pedido(String codigoDeCliente, String nombreDeCliente, String rucDeCliente, ArrayList<Item> items) {
+    public Orden(String codigoDeCliente, String nombreDeCliente, String rucDeCliente, ArrayList<Item> items) {
         this.codigoDeCliente = codigoDeCliente;
         this.nombreDeCliente = nombreDeCliente;
         this.rucDeCliente = rucDeCliente;

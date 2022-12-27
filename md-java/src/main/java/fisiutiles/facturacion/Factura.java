@@ -8,7 +8,7 @@ public class Factura {
     private String codigoDeCliente;
     private String nombreDeCliente;
     private String rucDeCliente;
-    private ArrayList<Item> items;
+    private ArrayList<ItemCalculado> items;
     private double totalIGV;
     private double totalFactura;
 
@@ -54,11 +54,11 @@ public class Factura {
         this.rucDeCliente = rucDeCliente;
     }
 
-    public ArrayList<Item> getItems() {
+    public ArrayList<ItemCalculado> getItems() {
         return items;
     }
 
-    public void setItems(ArrayList<Item> items) {
+    public void setItems(ArrayList<ItemCalculado> items) {
         this.items = items;
         double totalItems = calcularTotalItems();
         this.totalIGV = totalItems * 0.18;
@@ -81,7 +81,7 @@ public class Factura {
     private double calcularTotalItems() {
         double totalItems = 0.0;
 
-        for (Item item : this.items) {
+        for (ItemCalculado item : this.items) {
             totalItems += item.getSubTotal();
         }
 

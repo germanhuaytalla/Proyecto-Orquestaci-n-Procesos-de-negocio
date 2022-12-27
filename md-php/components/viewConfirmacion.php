@@ -13,7 +13,7 @@ if (isset($_POST['aceptar'])) {
   $stomp = $conn_md->connect();
   $producer = new Producer();
 
-  $array=["estado"=> 1, "mensaje"=> "Reserva confirmada"];
+  $array=["estado"=> 1, "contenido"=> "Reserva confirmada"];
   $mensaje=json_encode($array);
   $producer->enviarMensaje($stomp,constant('TOPIC_TO'),$mensaje);
 

@@ -4,14 +4,8 @@
  */
 package pruebas;
 
-import com.google.gson.Gson;
-import fisiutiles.facturacion.Item;
-import fisiutiles.facturacion.Mensaje;
-import fisiutiles.facturacion.Pedido;
-import fisiutiles.facturacion.Productor;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -19,8 +13,14 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import org.apache.activemq.artemis.jms.client.ActiveMQConnection;
+
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+
+import com.google.gson.Gson;
+
+import fisiutiles.facturacion.Item;
+import fisiutiles.facturacion.Mensaje;
+import fisiutiles.facturacion.Orden;
 
 /**
  *
@@ -51,7 +51,7 @@ public class TProducer {
         lista.add(it2);
         lista.add(it3);
         
-        Pedido p = new Pedido();
+        Orden p = new Orden();
         p.setCodigoDeCliente("18200038");
         p.setNombreDeCliente("Machin Alberto");
         p.setRucDeCliente("ruc-555");
@@ -66,9 +66,9 @@ public class TProducer {
         try ( Connection con = cf.createConnection()) {
             con.start();
 
-            Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Session ssn = con.createSession(Session.AUTO_ACKNOWLEDGE);
 
-            Destination dtn = ssn.createTopic("fisi_tiendautiles/mod_facturacion");
+            Destination dtn = ssn.createQueue("fisi_tiendautiles/mod_facturacion");
 
             MessageProducer mp = ssn.createProducer(dtn);
 
@@ -78,7 +78,7 @@ public class TProducer {
 
             mp.send(tm);
         } catch (JMSException ex) {
-            Logger.getLogger(Productor.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Esperando...");
         }
     }
 }
