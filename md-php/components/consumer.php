@@ -14,10 +14,6 @@ class Consumer{
       $topic,
       null,
       'auto'
-      // ,
-      // array(
-      //   "message-id"=>"id","priority"=>9
-      // )
     );
   
     //Listener
