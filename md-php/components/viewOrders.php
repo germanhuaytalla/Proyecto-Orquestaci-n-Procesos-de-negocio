@@ -17,7 +17,6 @@ if (isset($_POST['agregar_carrito'])) {
   } else {
     $insert__products = pg_query($conn, "INSERT INTO orden(codigo,descripcion,precio_unitario,cantidad) VALUES('$codigo','$nombre','$precio','$cantidad')");
     echo "<script>
-    alert('Producto agregado al carrito');
     window.location='viewOrders.php';
     </script>";
   }
@@ -47,20 +46,20 @@ if (isset($_POST['consulta_carrito'])) {
 
 <body>
   <section class="relative w-full">
-    <h1 class="absolute top-64 left-[25%] right-[25%] text-center text-6xl font-semibold bg-white text-[#0123E7] border-2 border-[#0123E7] py-4 px-2">FISI | TIENDA DE ÚTILES</h1>
-    <img class="absolute top-5 left-[40%] 2xl:left-[45%]" src="https://i.postimg.cc/4dxctWXr/cropped-logo-fisi-3.webp" alt="">
+    <h1 class="absolute top-64 left-[25%] right-[25%] text-center text-3xl lg:text-6xl font-semibold bg-white text-[#0123E7] border-2 border-[#0123E7] py-4 px-2">FISI | TIENDA DE ÚTILES</h1>
+    <img class="absolute top-5 left-[20%] md:left-[40%] 2xl:left-[45%]" src="https://i.postimg.cc/4dxctWXr/cropped-logo-fisi-3.webp" alt="">
     <img class="w-full object-cover h-[400px]" src="https://i.postimg.cc/rm2gBTFk/utiles-escolares-1024x576.jpg" alt="">
   </section>
   <section class="relative container mx-auto mb-20">
     <h1 class="text-4xl font-bold text-center py-10">Lista de productos</h1>
-    <div class="container mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
       <?php
       $select_products = pg_query($conn, "SELECT * FROM articulos");
 
       if (pg_num_rows($select_products)) {
         while ($row = pg_fetch_assoc($select_products)) {
       ?>
-          <form class="relative w-[25rem] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" action="" method="POST">
+          <form class="mx-auto relative w-[90%] flex flex-col gap-4 border-2 border-[#0123E7] rounded-lg py-2 px-5" action="" method="POST">
             <img src="<?php echo $row['imagen'] ?>" alt="libro1">
             <div class="text-center"><?php echo $row['codigo'] ?></div>
             <div class="absolute left-0 top-0 flex items-center justify-center w-16 h-10 bg-[#0123E7] rounded-lg text-white">s/. <?php echo $row['precio_unitario'] ?></div>
@@ -80,16 +79,17 @@ if (isset($_POST['consulta_carrito'])) {
       }
       ?>
     </div>
-    <div class="fixed right-10 bottom-10 bg-[#0123E7] text-white px-5 py-8 rounded-full  hover:scale-[0.9]">
-      <?php
-      $select_products = pg_query($conn, "SELECT * FROM orden");
 
-      ?>
-      <form class="" action="viewCarrito.php" method="POST">
+    <form class="" action="viewCarrito.php" method="POST">
+      <button name="consulta_carrito" class="fixed flex gap-2 right-10 bottom-10 bg-[#0123E7] text-white px-5 py-8 rounded-full  hover:scale-[0.9]">
+        <?php
+        $select_products = pg_query($conn, "SELECT * FROM orden");
+        ?>
         <i class="fas fa-shopping-cart text-2xl"></i>
-        <input class="text-2xl" type="submit" name="consulta_carrito" value="(<?php echo pg_num_rows($select_products); ?>)">
-      </form>
-    </div>
+        <p class="text-2xl">(<?php echo pg_num_rows($select_products); ?>)</p>
+      </button>
+    </form>
+
   </section>
 </body>
 

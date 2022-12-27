@@ -79,12 +79,14 @@ def reservar(items, message):
     
     # Solicitando confirmación del cliente en el módulo de procesamiento de órdenes
     print("ESPERANDO CONFIRMACION")
+    
     mensaje = {
         "estado": 1, 
         "contenido": "Solicitando confirmacion"
         }
     
     enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
+
 
     # Escuchando mensaje de confirmación
     hosts = [(settings.ACTIVEMQ_HOST, settings.ACTIVEMQ_PORT)]

@@ -13,10 +13,7 @@ class Consumer{
     $stomp->subscribe(
       $topic,
       null,
-      'auto',
-      array(
-        "message-id"=>"id","priority"=>9
-      )
+      'auto'
     );
   
     //Listener
@@ -26,6 +23,9 @@ class Consumer{
         echo "<script>
         window.location='".$view.".php';
         </script>";
+        break;
+      }else{
+        echo "No reception";
         break;
       }
     }

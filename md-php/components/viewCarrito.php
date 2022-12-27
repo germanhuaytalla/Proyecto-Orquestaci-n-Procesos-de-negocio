@@ -40,9 +40,9 @@ if (isset($_POST['enviar'])) {
         "items"=>$lista_productos 
       ]
     ];
-    echo "<pre>";
-    var_dump($mensaje);
-    echo "</pre>";
+    // echo "<pre>";
+    // var_dump($mensaje);
+    // echo "</pre>";
 
     //Enviar mensaje al proceso de Inventario de productos
     $conn_md = new ConnectMiddleware();
@@ -67,7 +67,7 @@ if (isset($_POST['enviar'])) {
       $stomp = $conn_md->connect();
       $consumer=new Consumer();
       $consumer->recibirMensaje(constant('TOPIC_FROM'), $stomp,'viewConfirmacion');
-            
+      
     }
   } else {
     echo "<script>
@@ -96,13 +96,13 @@ if (isset($_POST['enviar'])) {
 
 <body>
   <section class="relative w-full">
-    <h1 class="absolute top-64 left-[25%] right-[25%] text-center text-6xl font-semibold bg-white text-[#0123E7] border-2 border-[#0123E7] py-4 px-2">FISI | Carrito compras</h1>
-    <img class="absolute top-5 left-[40%] 2xl:left-[45%]" src="https://i.postimg.cc/4dxctWXr/cropped-logo-fisi-3.webp" alt="">
+    <h1 class="absolute top-64 left-[25%] right-[25%] text-center text-3xl lg:text-6xl font-semibold bg-white text-[#0123E7] border-2 border-[#0123E7] py-4 px-2">FISI | Carrito compras</h1>
+    <img class="absolute top-5 left-[20%] md:left-[40%] 2xl:left-[45%]" src="https://i.postimg.cc/4dxctWXr/cropped-logo-fisi-3.webp" alt="">
     <img class="w-full relative object-cover h-[400px] opacity-80 -z-10" src="https://i.postimg.cc/rm2gBTFk/utiles-escolares-1024x576.jpg" alt="">
   </section>
   <section class="max-w-[1000px] mx-auto mb-20 ">
     <h1 class="text-4xl font-bold text-center py-10">Lista de productos</h1>
-    <div class="container mx-auto flex gap-4">
+    <div class="container mx-auto flex flex-col lg:flex-row gap-4">
       <div class="max-w-[700px] mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4 place-content-center">
         <?php
         $total = 0;
@@ -116,7 +116,7 @@ if (isset($_POST['enviar'])) {
                 <a class="fas fa-times p-2" href="<?php echo "viewCarrito.php"; ?>?delete=<?php echo $row['codigo']; ?>" onclick="return confirm('¿Borrar producto?')">
                 </a>
               </div>
-              <div class="font-semibold pt-10"><span class="">Còdigo: </span><?php echo $row['codigo'] ?></div>
+              <div class="font-semibold pt-10"><span class="">Código: </span><?php echo $row['codigo'] ?></div>
               <div class=""><span class="font-semibold">Nombre:</span> <?php echo $row['descripcion'] ?></div>
               <div class=""><span class="font-semibold">Precio Unitario:</span> s/. <?php echo $row['precio_unitario'] ?></div>
 
@@ -124,7 +124,7 @@ if (isset($_POST['enviar'])) {
               <input type="hidden" name="p_nombre" value="<?php echo $row['descripcion'] ?>">
               <input type="hidden" name="p_precio" value="<?php echo $row['precio_unitario'] ?>">
 
-              <div class="flex flex-row  gap-4">
+              <div class="flex flex-row gap-4">
                 <input class="w-full border border-[#0123E7] px-2 rounded-lg" type="number" min="1" name="p_cantidad" value="<?php echo $row['cantidad'];  ?>">
                 <input class="w-full py-2 px-2 bg-[#847e7e] hover:bg-[#0123E7] transition duration-100 text-white rounded-lg" type="submit" name="actualizar_carrito" value="Actualizar carrito">
               </div>
@@ -138,7 +138,7 @@ if (isset($_POST['enviar'])) {
         }
         ?>
       </div>
-      <div class="max-w-[300px] h-full flex flex-col gap-4 bg-[#0123E7] text-center rounded-lg py-4 px-4">
+      <div class="order-first lg:order-last max-w-[300px] mx-auto h-full flex flex-col gap-4 bg-[#0123E7] text-center rounded-lg py-4 px-4">
         <p class="text-white font-bold text-3xl">Total generado: <span cla>s/.<?php echo $total; ?></span></p>
         <form action="viewCarrito.php" method="POST">
           <input type="submit" class="w-20 h-10 flex items-center justify-center text-center mx-auto border hover:border-white text-[#0123E7] hover:text-white bg-white hover:bg-[#0123E7] hover:scale-[0.9] transition duration-100 rounded-lg" value="Enviar" name="enviar">
