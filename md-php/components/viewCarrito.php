@@ -40,9 +40,9 @@ if (isset($_POST['enviar'])) {
         "items"=>$lista_productos 
       ]
     ];
-    echo "<pre>";
-    var_dump($mensaje);
-    echo "</pre>";
+    // echo "<pre>";
+    // var_dump($mensaje);
+    // echo "</pre>";
 
     //Enviar mensaje al proceso de Inventario de productos
     $conn_md = new ConnectMiddleware();

@@ -13,10 +13,11 @@ class Consumer{
     $stomp->subscribe(
       $topic,
       null,
-      'auto',
-      array(
-        "message-id"=>"id","priority"=>9
-      )
+      'auto'
+      // ,
+      // array(
+      //   "message-id"=>"id","priority"=>9
+      // )
     );
   
     //Listener
