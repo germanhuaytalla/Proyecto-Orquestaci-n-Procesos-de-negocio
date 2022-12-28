@@ -21,7 +21,7 @@ public class ConexionMariaDB {
 
     public ConexionMariaDB() {
         this.props = new PropertiesReader().getProperties();
-        this.url = "jdbc:mariadb://" + props.getProperty("MARIADB_HOST") + ":3306/" + props.getProperty("MARIADB_DB");
+        this.url = "jdbc:mariadb://" + props.getProperty("MARIADB_HOST") + ":15501/" + props.getProperty("MARIADB_DB");
         this.user = props.getProperty("MARIADB_USER");
         this.password = props.getProperty("MARIADB_PASSWORD");
     }
