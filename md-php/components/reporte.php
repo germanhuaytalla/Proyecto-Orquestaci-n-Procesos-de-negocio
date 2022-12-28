@@ -11,15 +11,13 @@ ob_start();
 $conn_md = new ConnectMiddleware();
 $stomp = $conn_md->connect();
 $consumer = new Consumer();
-$mensaje=$consumer->recibirMensajeCuentasPorCobrar('test', $stomp);
+$mensaje=$consumer->recibirMensajeCuentasPorCobrar('fisi_tiendautiles/mod_cuentas_x_cobrar', $stomp);
 
 if ($mensaje != null) {
+    echo $mensaje;
+
     echo "<script>
     alert('Mensaje recibido');
-    </script>";
-}else{
-    echo "<script>
-    alert('Mensaje no recibido');
     </script>";
 }
 

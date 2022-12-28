@@ -68,7 +68,6 @@ if (isset($_POST['enviar'])) {
       $consumer=new Consumer();
       $consumer->recibirMensajeConfirmacion(constant('TOPIC_FROM'), $stomp,'viewConfirmacion');
       
-
     }
   } else {
     echo "<script>

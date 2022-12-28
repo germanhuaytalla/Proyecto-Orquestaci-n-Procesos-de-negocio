@@ -3,7 +3,6 @@
 require __DIR__ . '/../vendor/autoload.php';
 include_once("connectDatabase.php");
 include_once("connectMiddleware.php");
-include_once("reporte.php");
 
 class Consumer
 {

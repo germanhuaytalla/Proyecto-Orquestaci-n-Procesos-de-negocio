@@ -26,7 +26,7 @@ if (isset($_POST['aceptar'])) {
   } else {
     echo "<script>
     // alert('El mensaje se envió correctamente');
-    window.location='viewReporte.php';
+    window.location='reporte.php';
     </script>";
   }
 }
