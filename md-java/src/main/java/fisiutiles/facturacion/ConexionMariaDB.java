@@ -30,12 +30,12 @@ public class ConexionMariaDB {
         String sql = "INSERT INTO facturas (codigo_cliente, nombre_cliente, ruc_cliente, lista_items, total_igv, total_factura) VALUES (?,?,?,?,?,?)";
         
         try ( Connection con = (Connection) DriverManager.getConnection(url, user, password);  PreparedStatement stm = con.prepareStatement(sql)) {
-            stm.setString(1, factura.getCodigoDeCliente());
-            stm.setString(2, factura.getNombreDeCliente());
-            stm.setString(3, factura.getRucDeCliente());
-            stm.setString(4, new Gson().toJson(factura.getItems()));
-            stm.setDouble(5, factura.getTotalIGV());
-            stm.setDouble(6, factura.getTotalFactura());
+            stm.setString(1, factura.getCodigo_cliente());
+            stm.setString(2, factura.getNombre_cliente());
+            stm.setString(3, factura.getRuc_de_cliente());
+            stm.setString(4, new Gson().toJson(factura.getLista_items()));
+            stm.setDouble(5, factura.getTotal_igv());
+            stm.setDouble(6, factura.getTotal_factura());
             stm.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -49,11 +49,11 @@ public class ConexionMariaDB {
 
             while (rs.next()) {
                 Factura obj = new Factura();
-                obj.setNumeroDeFactura(rs.getInt("numero_factura"));
-                obj.setCodigoDeCliente(rs.getString("codigo_cliente"));
-                obj.setNombreDeCliente(rs.getString("nombre_cliente"));
-                obj.setRucDeCliente(rs.getString("ruc_cliente"));
-                obj.setItems(new Gson().fromJson(rs.getString("lista_items"), type));
+                obj.setNumero_factura(rs.getInt("numero_factura"));
+                obj.setCodigo_cliente(rs.getString("codigo_cliente"));
+                obj.setNombre_cliente(rs.getString("nombre_cliente"));
+                obj.setRuc_de_cliente(rs.getString("ruc_cliente"));
+                obj.setLista_items(new Gson().fromJson(rs.getString("lista_items"), type));
                 System.out.println(obj);
             }
 

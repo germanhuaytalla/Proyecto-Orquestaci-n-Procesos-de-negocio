@@ -5,13 +5,13 @@ public class Item {
     private String codigo;
     private String descripcion;
     private int cantidad;
-    private double precioUnitario;
+    private double precio_unitario;
 
     public Item() {
         this.codigo = "no hay informacion";
         this.descripcion = "no hay informacion";
         this.cantidad = 0;
-        this.precioUnitario = 0.0;
+        this.precio_unitario = 0.0;
     }
 
     public String getCodigo() {
@@ -38,16 +38,16 @@ public class Item {
         this.cantidad = cantidad;
     }
 
-    public double getPrecioUnitario() {
-        return precioUnitario;
+    public double getPrecio_unitario() {
+        return precio_unitario;
     }
 
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
+    public void setPrecio_unitario(double precioUnitario) {
+        this.precio_unitario = precioUnitario;
     }
 
     @Override
     public String toString() {
-        return "Item{" + "codigo=" + codigo + ", descripcion=" + descripcion + ", cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + '}';
+        return "Item{" + "codigo=" + codigo + ", descripcion=" + descripcion + ", cantidad=" + cantidad + ", precioUnitario=" + precio_unitario + '}';
     }
 }

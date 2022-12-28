@@ -11,33 +11,33 @@ def listaProductos():
         {   
             "estado":1,
             "contenido":{
-                "codigoDeCliente":"14266484",
-        	    "nombreDeCliente":"paco",
-        	    "rucDeCliente":"ruc511",
-                "items":[
+                "codigo_cliente":"14266484",
+        	    "nombre_cliente":"paco",
+        	    "ruc_cliente":"ruc511",
+                "lista_items":[
                     {   
                         "codigo":"1000",
                         "descripcion":"desc 1",
                         "cantidad":5,
-                        "precioUnitario":41.2,
+                        "precio_unitario":41.2,
                     },
                     {
                         "codigo":"1002",
                         "descripcion":"desc 2",
                         "cantidad":3,
-                        "precioUnitario":13.7,
+                        "precio_unitario":13.7,
                     },
                     {
                         "codigo":"1003",
                         "descripcion":"desc 3",
                         "cantidad":3,
-                        "precioUnitario":8.5,
+                        "precio_unitario":8.5,
                     },
                      {
                         "codigo":"1004",
                         "descripcion":"desc 4",
                         "cantidad":3,
-                        "precioUnitario":20.1,
+                        "precio_unitario":20.1,
                     }
                 ]
             }

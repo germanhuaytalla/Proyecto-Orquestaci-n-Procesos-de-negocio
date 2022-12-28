@@ -57,37 +57,39 @@ public class Consumidor {
                 }
                 
                 Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
-                
+                System.out.println(msjf.getContenido());
+                System.out.println("\n\n");
+
                 // start operar
                 Orden objPedido = new Gson().fromJson(msjf.getContenido().toString(), Orden.class);
                 ArrayList<ItemCalculado> items = new ArrayList<>();
                 
-                for (Item it : objPedido.getItems()) {
+                for (Item it : objPedido.getLista_items()) {
                     ItemCalculado itc = new ItemCalculado();
                     itc.setCodigo(it.getCodigo());
                     itc.setDescripcion(it.getDescripcion());
                     itc.setCantidad(it.getCantidad());
-                    itc.setPrecioUnitario(it.getPrecioUnitario());
+                    itc.setPrecio_unitario(it.getPrecio_unitario());
                     items.add(itc);
                 }
 
                 Factura objFactura = new Factura();
-                objFactura.setCodigoDeCliente(objPedido.getCodigoDeCliente());
-                objFactura.setNombreDeCliente(objPedido.getNombreDeCliente());
-                objFactura.setRucDeCliente(objPedido.getRucDeCliente());
-                objFactura.setItems(items);
+                objFactura.setCodigo_cliente(objPedido.getCodigo_cliente());
+                objFactura.setNombre_cliente(objPedido.getNombre_cliente());
+                objFactura.setRuc_de_cliente(objPedido.getRuc_cliente());
+                objFactura.setLista_items(items);
                 // end operar
 
                 // start insercion en bbdd
-                //ConexionMariaDB db = new ConexionMariaDB();
-                //db.insert(objFactura);
+                ConexionMariaDB db = new ConexionMariaDB();
+                db.insert(objFactura);
                 // end insercion en bbdd
 
                 // start creando mensaje para modulo de cuentas x cobrar
 
                 Mensaje msjt = new Mensaje();
                 
-                msjt.setEstado(0);
+                msjt.setEstado(1);
                 msjt.setContenido(new Gson().toJsonTree(objFactura).getAsJsonObject());
                 System.out.println(msjt);
                 // end creando mensaje para modulo de cuentas x cobrar

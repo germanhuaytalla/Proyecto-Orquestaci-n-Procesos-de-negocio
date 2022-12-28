@@ -4,85 +4,85 @@ import java.util.ArrayList;
 
 public class Factura {
 
-    private int numeroDeFactura;
-    private String codigoDeCliente;
-    private String nombreDeCliente;
-    private String rucDeCliente;
-    private ArrayList<ItemCalculado> items;
-    private double totalIGV;
-    private double totalFactura;
+    private int numero_factura;
+    private String codigo_cliente;
+    private String nombre_cliente;
+    private String ruc_de_cliente;
+    private ArrayList<ItemCalculado> lista_items;
+    private double total_igv;
+    private double total_factura;
 
     public Factura() {
-        this.numeroDeFactura = 0;
-        this.codigoDeCliente = "no hay informacion";
-        this.nombreDeCliente = "no hay informacion";
-        this.rucDeCliente = "no hay informacion";
-        this.items = new ArrayList<>();
-        this.totalIGV = 0.0;
-        this.totalFactura = 0.0;
+        this.numero_factura = 0;
+        this.codigo_cliente = "no hay informacion";
+        this.nombre_cliente = "no hay informacion";
+        this.ruc_de_cliente = "no hay informacion";
+        this.lista_items = new ArrayList<>();
+        this.total_igv = 0.0;
+        this.total_factura = 0.0;
     }
 
-    public int getNumeroDeFactura() {
-        return numeroDeFactura;
+    public int getNumero_factura() {
+        return numero_factura;
     }
 
-    public void setNumeroDeFactura(int numeroDeFactura) {
-        this.numeroDeFactura = numeroDeFactura;
+    public void setNumero_factura(int numeroDeFactura) {
+        this.numero_factura = numeroDeFactura;
     }
 
-    public String getCodigoDeCliente() {
-        return codigoDeCliente;
+    public String getCodigo_cliente() {
+        return codigo_cliente;
     }
 
-    public void setCodigoDeCliente(String codigoDeCliente) {
-        this.codigoDeCliente = codigoDeCliente;
+    public void setCodigo_cliente(String codigoDeCliente) {
+        this.codigo_cliente = codigoDeCliente;
     }
 
-    public String getNombreDeCliente() {
-        return nombreDeCliente;
+    public String getNombre_cliente() {
+        return nombre_cliente;
     }
 
-    public void setNombreDeCliente(String nombreDeCliente) {
-        this.nombreDeCliente = nombreDeCliente;
+    public void setNombre_cliente(String nombreDeCliente) {
+        this.nombre_cliente = nombreDeCliente;
     }
 
-    public String getRucDeCliente() {
-        return rucDeCliente;
+    public String getRuc_de_cliente() {
+        return ruc_de_cliente;
     }
 
-    public void setRucDeCliente(String rucDeCliente) {
-        this.rucDeCliente = rucDeCliente;
+    public void setRuc_de_cliente(String rucDeCliente) {
+        this.ruc_de_cliente = rucDeCliente;
     }
 
-    public ArrayList<ItemCalculado> getItems() {
-        return items;
+    public ArrayList<ItemCalculado> getLista_items() {
+        return lista_items;
     }
 
-    public void setItems(ArrayList<ItemCalculado> items) {
-        this.items = items;
+    public void setLista_items(ArrayList<ItemCalculado> items) {
+        this.lista_items = items;
         double totalItems = calcularTotalItems();
-        this.totalIGV = totalItems * 0.18;
-        this.totalFactura = totalItems + this.totalIGV;
+        this.total_igv = totalItems * 0.18;
+        this.total_factura = totalItems + this.total_igv;
     }
 
-    public double getTotalIGV() {
-        return totalIGV;
+    public double getTotal_igv() {
+        return total_igv;
     }
 
-    public double getTotalFactura() {
-        return totalFactura;
+    public double getTotal_factura() {
+        return total_factura;
     }
 
     @Override
     public String toString() {
-        return "Factura{" + "numeroDeFactura=" + numeroDeFactura + ", codigoDeCliente=" + codigoDeCliente + ", nombreDeCliente=" + nombreDeCliente + ", rucDeCliente=" + rucDeCliente + ", items=" + items + ", totalIGV=" + totalIGV + ", totalFactura=" + totalFactura + '}';
+        return "Factura{" + "numeroDeFactura=" + numero_factura + ", codigoDeCliente=" + codigo_cliente + ", nombreDeCliente=" + nombre_cliente + ", rucDeCliente=" + ruc_de_cliente + ", items=" + lista_items + ", totalIGV=" + total_igv + ", totalFactura=" + total_factura + '}';
     }
 
     private double calcularTotalItems() {
         double totalItems = 0.0;
 
-        for (ItemCalculado item : this.items) {
-            totalItems += item.getSubTotal();
+        for (ItemCalculado item : this.lista_items) {
+            totalItems += item.getSub_total();
         }
 
         return totalItems;

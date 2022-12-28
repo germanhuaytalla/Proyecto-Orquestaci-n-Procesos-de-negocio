@@ -5,15 +5,15 @@ public class ItemCalculado {
     private String codigo;
     private String descripcion;
     private int cantidad;
-    private double precioUnitario;
-    private double subTotal;
+    private double precio_unitario;
+    private double sub_total;
 
     public ItemCalculado() {
         this.codigo = "no hay informacion";
         this.descripcion = "no hay informacion";
         this.cantidad = 0;
-        this.precioUnitario = 0.0;
-        this.subTotal = 0.0;
+        this.precio_unitario = 0.0;
+        this.sub_total = 0.0;
     }
 
     public String getCodigo() {
@@ -38,25 +38,25 @@ public class ItemCalculado {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-        this.subTotal = cantidad * this.precioUnitario;
+        this.sub_total = cantidad * this.precio_unitario;
     }
 
-    public double getPrecioUnitario() {
-        return precioUnitario;
+    public double getPrecio_unitario() {
+        return precio_unitario;
     }
 
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
-        this.subTotal = precioUnitario * this.cantidad;
+    public void setPrecio_unitario(double precioUnitario) {
+        this.precio_unitario = precioUnitario;
+        this.sub_total = precioUnitario * this.cantidad;
     }
 
-    public double getSubTotal() {
-        return subTotal;
+    public double getSub_total() {
+        return sub_total;
     }
 
     @Override
     public String toString() {
         return "ItemCalculado [codigo=" + codigo + ", descripcion=" + descripcion + ", cantidad=" + cantidad
-                + ", precioUnitario=" + precioUnitario + ", subTotal=" + subTotal + "]";
+                + ", precioUnitario=" + precio_unitario + ", subTotal=" + sub_total + "]";
     }
 }
