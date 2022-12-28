@@ -95,7 +95,7 @@ def reservar(items, message):
     conn.connect(wait=True, headers = {'client-id': 'fisi_utiles'} )
     conn.subscribe(destination=settings.TOPIC_FROM, id=987, ack='auto',headers = {'subscription-type': 'ANYCAST','durable-subscription-name':'confirmacion'})
 
-    for x in range(int(settings.TIEMPO_ESPERA), 0, -1):
+    for x in range(int(settiWngs.TIEMPO_ESPERA), 0, -1):
         seconds = x % 60
         minutes = int(x / 60) % 60
         hours = int (x / 3600)
