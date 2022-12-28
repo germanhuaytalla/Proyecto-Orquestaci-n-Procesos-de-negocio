@@ -17,6 +17,7 @@ import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class Consumidor implements Runnable {
 
@@ -58,8 +59,7 @@ public class Consumidor implements Runnable {
                     json_msg = text;
                 }
                 
-                JSONObject obj = new JSONObject(json_msg);
-                Mensaje msjf = new Mensaje(obj.getInt("estado"), obj.getJSONObject("contenido").toString());
+                Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
                 
                 // start operar
                 Orden objPedido = new Gson().fromJson(msjf.getContenido().toString(), Orden.class);
@@ -89,8 +89,9 @@ public class Consumidor implements Runnable {
                 // start creando mensaje para modulo de cuentas x cobrar
 
                 Mensaje msjt = new Mensaje();
+                
                 msjt.setEstado(0);
-                msjt.setContenido(new Gson().toJson(objFactura));
+                msjt.setContenido(new Gson().toJsonTree(objFactura).getAsJsonObject());
                 System.out.println(msjt);
                 // end creando mensaje para modulo de cuentas x cobrar
 
