@@ -3,8 +3,6 @@ package fisiutiles.facturacion;
 import com.google.gson.Gson;
 import java.util.Properties;
 import javax.jms.Session;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -41,7 +39,7 @@ public class Productor {
 
             mp.send(tm);
         } catch (JMSException ex) {
-            System.out.println("Error?");
+            System.out.println("PRODUCTOR: " + ex.getMessage());
         }
     }
 }

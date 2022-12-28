@@ -14,11 +14,9 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
 
-public class Consumidor implements Runnable {
+public class Consumidor {
 
     public static void main(String[] args) {
         new Consumidor().consumirMensajeAdministracionDeInventarioYReserva();
@@ -58,8 +56,7 @@ public class Consumidor implements Runnable {
                     json_msg = text;
                 }
                 
-                JSONObject obj = new JSONObject(json_msg);
-                Mensaje msjf = new Mensaje(obj.getInt("estado"), obj.getJSONObject("contenido").toString());
+                Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
                 
                 // start operar
                 Orden objPedido = new Gson().fromJson(msjf.getContenido().toString(), Orden.class);
@@ -89,8 +86,9 @@ public class Consumidor implements Runnable {
                 // start creando mensaje para modulo de cuentas x cobrar
 
                 Mensaje msjt = new Mensaje();
+                
                 msjt.setEstado(0);
-                msjt.setContenido(new Gson().toJson(objFactura));
+                msjt.setContenido(new Gson().toJsonTree(objFactura).getAsJsonObject());
                 System.out.println(msjt);
                 // end creando mensaje para modulo de cuentas x cobrar
 
@@ -99,14 +97,9 @@ public class Consumidor implements Runnable {
                 prod.enviarMensajeCuentasPorCobrar(msjt);
                 // end mandando mensaje al modulo de cuentas x cobrar
             } catch (JMSException ex) {
-                System.out.println("Esperando...");
+                System.out.println("ERROR: " + ex.getMessage());
             }
         }
-    }
-
-    @Override
-    public void run() {
-        this.consumirMensajeAdministracionDeInventarioYReserva();
     }
 }
 
