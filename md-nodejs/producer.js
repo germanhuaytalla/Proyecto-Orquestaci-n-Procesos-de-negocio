@@ -29,6 +29,7 @@ const sendMessage = (message, destination) => {
         message = JSON.stringify(message)
         const messageBuffer = Buffer.from(message);
         const messageString = messageBuffer.toString('utf8');
+        console.log(messageString)
         client.send(destination, {}, messageString);
         client.disconnect();
     });

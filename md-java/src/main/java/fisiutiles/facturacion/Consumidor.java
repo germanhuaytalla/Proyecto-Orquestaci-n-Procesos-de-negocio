@@ -84,6 +84,8 @@ public class Consumidor {
                 ConexionMariaDB db = new ConexionMariaDB();
                 db.insert(objFactura);
                 // end insercion en bbdd
+                
+                objFactura.setNumero_factura(db.select());
 
                 // start creando mensaje para modulo de cuentas x cobrar
 

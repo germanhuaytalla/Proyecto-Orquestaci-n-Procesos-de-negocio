@@ -11,10 +11,10 @@ ob_start();
 $conn_md = new ConnectMiddleware();
 $stomp = $conn_md->connect();
 $consumer = new Consumer();
-$mensaje=$consumer->recibirMensajeCuentasPorCobrar('fisi_tiendautiles/mod_cuentas_x_cobrar', $stomp);
+$mensaje=$consumer->recibirMensajeCuentasPorCobrar('fisi_tiendautiles/mod_ordenes', $stomp);
 
 if ($mensaje != null) {
-    print_r($mensaje);
+    // print_r($mensaje);
 
     echo "<script>
     alert('Mensaje recibido');
@@ -169,17 +169,18 @@ if ($mensaje != null) {
                 <td class="info_empresa">
                     <div>
                         <span class="h2">FACTURA</span>
-                        <p>Fisi Tiendas Ùtiles</p>
+                        <p>Fisi Tiendas Útiles</p>
                         <p>Email: fisitiendasutiles@gmail.com</p>
                         <p>Estado: <?php echo $mensaje['contenido']['estado_registro']; ?></p>
+                        <p>Fecha de cobro: <?php echo $mensaje['contenido']['fecha_cobro']; ?></p>
                     </div>
                 </td>
                 <td class="info_factura">
                     <div class="round">
                         <span class="h3">Nro.Factura</span>
-                        <p><strong>Factura:</strong><?php echo $mensaje['contenido']['num_factura']; ?></p>
+                        <p><strong>Factura:</strong><?php echo $mensaje['contenido']['numero_factura']; ?></p>
                         <p><strong>Fecha y Hora:</strong>
-                            <?php echo $mensaje['contenido']['fecha_cobro']; ?>
+                            <?php echo $mensaje['contenido']['fecha_factura']; ?>
                         </p>
                         <p><strong>Vendedor:</strong> Sr. Fracisco Perez</p>
                     </div>
@@ -223,9 +224,9 @@ if ($mensaje != null) {
                     <tr>
                         <td><?php echo $prod['codigo']; ?></td>
                         <td><?php echo $prod['descripcion']; ?></td>
-                        <td>s/.<?php echo $prod['precioUnitario']; ?></td>
+                        <td>s/.<?php echo $prod['precio_unitario']; ?></td>
                         <td><?php echo $prod['cantidad']; ?></td>
-                        <td>s/.<?php echo $prod['subTotal']; ?></td>
+                        <td>s/.<?php echo $prod['sub_total']; ?></td>
                     </tr>
                 <?php
 

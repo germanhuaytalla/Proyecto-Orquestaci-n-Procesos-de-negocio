@@ -17,6 +17,7 @@ const cuentasPorCobrarSchema = new mongoose.Schema({
     lista_items: Array,
     total_igv: Number,
     total_x_cobrar: Number,
+    fecha_factura: Date,
     fecha_cobro: Date,
     estado_registro: String
 });
@@ -33,7 +34,7 @@ module.exports.ejecutarAccion = (mensaje) => {
             console.log('Conexión a la base de datos establecida con éxito.');
             cuentasPorCobrar(mensaje);
             setTimeout(function () {
-                mongoose.connection.close();      
+                mongoose.connection.close();
             }, 2000);
 
         })
@@ -47,14 +48,26 @@ function cuentasPorCobrar(mensaje) {
     console.log(mensaje)
     mensaje = mensaje['contenido']
     console.log(mensaje)
- 
-    // Hora actual UTC-5
-    const currentTime = Date.now();
-    const timeInUtc5 = new Date(currentTime - 5*60*60*1000);
-    const timeInIsoFormat = timeInUtc5.toISOString();
 
-    // Sumar una semana a la fecha actual
-    const fecha_cobro = new Date(timeInUtc5.setDate(timeInUtc5.getDate() + 7));
+    // Hora actual UTC-5
+
+    const fechaActual = new Date();
+    const fecha_actual = fechaActual.toLocaleString('es-CO', {
+        timeZone: 'Etc/GMT+5',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    fechaActual.setDate(fechaActual.getDate() + 7);
+
+    const fecha_cobro = fechaActual.toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
 
     // Campos para guardar en MONGODB
     contenido = {
@@ -65,6 +78,7 @@ function cuentasPorCobrar(mensaje) {
         lista_items: mensaje['lista_items'],
         total_igv: mensaje['total_igv'],
         total_x_cobrar: mensaje['total_factura'],
+        fecha_factura: fecha_actual,
         fecha_cobro: fecha_cobro,
         estado_registro: 'pendiente'
     }
@@ -81,7 +95,7 @@ function cuentasPorCobrar(mensaje) {
 
     // Mensaje de confirmacion para el modulo de procesamiento de ordenes
     const mensajeConfirmacion = {
-        estado:1,
+        estado: 1,
         contenido: contenido
     }
 

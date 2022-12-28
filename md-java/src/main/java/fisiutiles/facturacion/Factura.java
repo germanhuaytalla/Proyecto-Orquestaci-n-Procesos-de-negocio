@@ -13,7 +13,7 @@ public class Factura {
     private double total_factura;
 
     public Factura() {
-        this.numero_factura = 0;
+        this.numero_factura = 1000;
         this.codigo_cliente = "no hay informacion";
         this.nombre_cliente = "no hay informacion";
         this.ruc_cliente = "no hay informacion";

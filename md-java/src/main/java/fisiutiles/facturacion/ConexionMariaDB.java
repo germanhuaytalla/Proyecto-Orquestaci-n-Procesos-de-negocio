@@ -42,10 +42,10 @@ public class ConexionMariaDB {
         }
     }
 
-    public void select() {
+    public int select() {
         try ( Connection con = (Connection) DriverManager.getConnection(url, user, password);  Statement stm = (Statement) con.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT * FROM facturas");
-            Type type = new TypeToken<ArrayList<Item>>() {}.getType();
+            ResultSet rs = stm.executeQuery("SELECT * FROM facturas ORDER BY numero_factura DESC LIMIT 1");
+            Type type = new TypeToken<ArrayList<ItemCalculado>>() {}.getType();
 
             while (rs.next()) {
                 Factura obj = new Factura();
@@ -54,11 +54,13 @@ public class ConexionMariaDB {
                 obj.setNombre_cliente(rs.getString("nombre_cliente"));
                 obj.setRuc_de_cliente(rs.getString("ruc_cliente"));
                 obj.setLista_items(new Gson().fromJson(rs.getString("lista_items"), type));
-                System.out.println(obj);
+                
+                return obj.getNumero_factura();
             }
-
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        
+        return 0;
     }
 }
