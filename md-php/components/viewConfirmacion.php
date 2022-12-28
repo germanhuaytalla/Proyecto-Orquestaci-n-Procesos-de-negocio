@@ -16,7 +16,7 @@ if (isset($_POST['aceptar'])) {
 
   $array = ["estado" => 1, "contenido" => "Reserva confirmada"];
   $mensaje = json_encode($array);
-  $producer->enviarMensaje($stomp, constant('TOPIC_TO'), $mensaje);
+  $producer->enviarMensaje($stomp, 'fisi_tiendautiles/mod_inventario_reserva/confirmacion', $mensaje);
 
   if (!$producer) {
     echo "<script>

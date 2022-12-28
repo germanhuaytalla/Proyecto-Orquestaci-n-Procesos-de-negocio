@@ -17,8 +17,8 @@ const cuentasPorCobrarSchema = new mongoose.Schema({
     lista_items: Array,
     total_igv: Number,
     total_x_cobrar: Number,
-    fecha_factura: Date,
-    fecha_cobro: Date,
+    fecha_factura: String,
+    fecha_cobro: String,
     estado_registro: String
 });
 

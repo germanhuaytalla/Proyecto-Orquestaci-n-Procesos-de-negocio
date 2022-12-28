@@ -63,7 +63,7 @@ if (isset($_POST['enviar'])) {
       $conn_md = new ConnectMiddleware();
       $stomp = $conn_md->connect();
       $consumer=new Consumer();
-      $consumer->recibirMensajeConfirmacion(constant('TOPIC_FROM'), $stomp,'viewConfirmacion');
+      $consumer->recibirMensajeConfirmacion('fisi_tiendautiles/mod_ordenes/confirmacion', $stomp,'viewConfirmacion');
       
     }
   } else {

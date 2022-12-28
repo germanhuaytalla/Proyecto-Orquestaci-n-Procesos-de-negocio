@@ -18,10 +18,19 @@ class Consumer
     //Listener
     while (true) {
       $mensaje = $stomp->read();
+      
       if ($mensaje != null) {
-        echo "<script>
-        window.location='" . $view . ".php';
-        </script>";
+        $mensaje2 = json_decode($mensaje->body, true);
+        // print_r($mensaje2);
+        if($mensaje2['estado'] == 1){
+          echo "<script>
+          window.location='" . $view . ".php';
+          </script>";
+        } else if($mensaje2['estado'] == 0) {
+          echo "<script>
+          window.location='viewError.php';
+          </script>";
+        }
         break;
       } else {
         echo "No reception";

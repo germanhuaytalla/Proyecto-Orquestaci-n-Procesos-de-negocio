@@ -15,7 +15,6 @@ class ListenerArticulos(stomp.ConnectionListener):
     def on_message(self, message):
         print(message.body)
         # print('lista de articulos recibida con exito "%s' % message.body)
-        conn.disconnect()
         validarArticulos(message.body)
     
 class ListenerConfirmacion(stomp.ConnectionListener): 
@@ -46,13 +45,13 @@ def validarArticulos(mensaje):
         cur.execute("SELECT cantidad FROM articulos where codigo = {}".format(item['codigo']))
         stock = cur.fetchall()
         if cur.rowcount == 0:
-            mensaje = {
+            mensaje = { 
                 "estado": 0, 
                 "contenido": "El articulo " + item['codigo'] + " no existe."
                 }
             print(mensaje)
             # Se envía mensaje de error al módulo de órdenes
-            enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
+            enviarMensaje('fisi_tiendautiles/mod_ordenes/confirmacion', json.dumps(mensaje))
             break
         else:
             stock = int(stock[0][0])
@@ -67,7 +66,7 @@ def validarArticulos(mensaje):
                     "contenido": "No hay stock suficiente del articulo " + item['codigo'] + ". Solo hay " + str(stock) + " unidades"
                     }
                 print(mensaje)
-                enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
+                enviarMensaje('fisi_tiendautiles/mod_ordenes/confirmacion', json.dumps(mensaje))
                 break
 
 def reservar(items, message):
@@ -85,7 +84,7 @@ def reservar(items, message):
         "contenido": "Solicitando confirmacion"
         }
     
-    enviarMensaje(settings.TOPIC_TO_1, json.dumps(mensaje))
+    enviarMensaje('fisi_tiendautiles/mod_ordenes/confirmacion', json.dumps(mensaje))
 
 
     # Escuchando mensaje de confirmación
@@ -93,7 +92,7 @@ def reservar(items, message):
     conn = stomp.Connection(host_and_ports=hosts)
     conn.set_listener('', ListenerConfirmacion(conn))
     conn.connect(wait=True, headers = {'client-id': 'fisi_utiles'} )
-    conn.subscribe(destination=settings.TOPIC_FROM, id=987, ack='auto',headers = {'subscription-type': 'ANYCAST','durable-subscription-name':'confirmacion'})
+    conn.subscribe(destination='fisi_tiendautiles/mod_inventario_reserva/confirmacion', id=987, ack='auto',headers = {'subscription-type': 'ANYCAST','durable-subscription-name':'confirmacion'})
 
     for x in range(int(settings.TIEMPO_ESPERA), 0, -1):
         seconds = x % 60
@@ -118,12 +117,18 @@ def reservar(items, message):
     conn.disconnect()
 
 
+
 confirmacion = 0        
 hosts = [(settings.ACTIVEMQ_HOST, settings.ACTIVEMQ_PORT)]
-conn = stomp.Connection(host_and_ports=hosts)
-conn.set_listener('', ListenerArticulos(conn))
-conn.connect(wait=True, headers = {'client-id': 'fisi_utiles'} )
-conn.subscribe(destination=settings.TOPIC_FROM, id=123, ack='auto', headers = {'subscription-type': 'ANYCAST','durable-subscription-name':'inventario'})
-print("Esperando mensajes...")
-while 1:
-    time.sleep(30)
+
+while True:
+    try:
+        # Lógica de conexión y suscripción
+        conn = stomp.Connection(host_and_ports=hosts)
+        conn.set_listener('my_listener', ListenerArticulos(conn))
+        conn.connect(wait=True, headers = {'client-id': 'fisi_utiles'} )
+        conn.subscribe(destination=settings.TOPIC_FROM, id=123, ack='auto', headers = {'subscription-type': 'ANYCAST','durable-subscription-name':'inventario'})
+    except Exception as e:
+        # Si hay algún problema con la conexión o suscripción, se imprime el error y se vuelve a intentar en el siguiente ciclo del bucle
+        print("Error: ", e)
+    time.sleep(1)
