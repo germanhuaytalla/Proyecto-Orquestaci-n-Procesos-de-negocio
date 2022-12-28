@@ -36,7 +36,7 @@ class ListenerConfirmacion(stomp.ConnectionListener):
 
 def validarArticulos(mensaje):
     datos = json.loads(mensaje)
-    items = datos['contenido']['items']
+    items = datos['contenido']['lista_items']
     print("Validando lista de artículos")
     cnn = mysql.connector.connect(host=settings.MYSQL_HOST, user=settings.MYSQL_USER, passwd=settings.MYSQL_PASSWORD, database=settings.MYSQL_DB)
     cur = cnn.cursor()

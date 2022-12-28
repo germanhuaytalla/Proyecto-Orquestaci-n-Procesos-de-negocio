@@ -3,3 +3,5 @@ composer.lock
 node_modules
 target/
 .env
+md-java/target/classes/fisiutiles/facturacion/PropertiesReader.class
+md-java/src/main/java/fisiutiles/facturacion/PropertiesReader.java

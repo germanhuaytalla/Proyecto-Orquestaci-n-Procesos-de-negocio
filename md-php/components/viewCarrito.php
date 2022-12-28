@@ -34,10 +34,10 @@ if (isset($_POST['enviar'])) {
     $mensaje=[
       "estado"=>1,
       "contenido"=>[
-        "codigoDeCliente"=>"001",
-        "nombreDeCliente"=>"Germán",
-        "rucDeCliente"=>"ruc001",
-        "items"=>$lista_productos 
+        "codigo_cliente"=>"001",
+        "nombre_cliente"=>"Germán",
+        "ruc_cliente"=>"ruc001",
+        "lista_items"=>$lista_productos 
       ]
     ];
 

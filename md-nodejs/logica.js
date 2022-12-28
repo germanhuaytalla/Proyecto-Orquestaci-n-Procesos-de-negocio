@@ -27,7 +27,7 @@ module.exports.ejecutarAccion = (mensaje) => {
     // mensaje = mensaje.replace(/\\/g, '');
 
     // Lógica de la acción a realizar
-    console.log(`Se ha recibido el mensaje: ${mensaje} y se está realizando la acción`);
+    // console.log(`Se ha recibido el mensaje: ${mensaje} y se está realizando la acción`);
     dbConnection.connect({ host, port, name })
         .then(() => {
             console.log('Conexión a la base de datos establecida con éxito.');
@@ -44,8 +44,8 @@ module.exports.ejecutarAccion = (mensaje) => {
 function cuentasPorCobrar(mensaje) {
 
     mensaje = JSON.parse(mensaje)
-    
-    mensaje = JSON.parse(mensaje['contenido'])
+    console.log(mensaje)
+    mensaje = mensaje['contenido']
     console.log(mensaje)
  
     // Hora actual UTC-5
@@ -58,13 +58,13 @@ function cuentasPorCobrar(mensaje) {
 
     // Campos para guardar en MONGODB
     contenido = {
-        numero_factura: mensaje['numeroDeFactura'],
-        codigo_cliente: mensaje['codigoDeCliente'],
-        nombre_cliente: mensaje['nombreDeCliente'],
-        ruc_cliente: mensaje['rucDeCliente'],
-        lista_items: mensaje['items'],
-        total_igv: mensaje['totalIGV'],
-        total_x_cobrar: mensaje['totalFactura'],
+        numero_factura: mensaje['numero_factura'],
+        codigo_cliente: mensaje['codigo_cliente'],
+        nombre_cliente: mensaje['nombre_cliente'],
+        ruc_cliente: mensaje['ruc_cliente'],
+        lista_items: mensaje['lista_items'],
+        total_igv: mensaje['total_igv'],
+        total_x_cobrar: mensaje['total_factura'],
         fecha_cobro: fecha_cobro,
         estado_registro: 'pendiente'
     }

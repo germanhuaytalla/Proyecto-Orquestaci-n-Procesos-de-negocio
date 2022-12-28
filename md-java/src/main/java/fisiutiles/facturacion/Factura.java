@@ -7,7 +7,7 @@ public class Factura {
     private int numero_factura;
     private String codigo_cliente;
     private String nombre_cliente;
-    private String ruc_de_cliente;
+    private String ruc_cliente;
     private ArrayList<ItemCalculado> lista_items;
     private double total_igv;
     private double total_factura;
@@ -16,7 +16,7 @@ public class Factura {
         this.numero_factura = 0;
         this.codigo_cliente = "no hay informacion";
         this.nombre_cliente = "no hay informacion";
-        this.ruc_de_cliente = "no hay informacion";
+        this.ruc_cliente = "no hay informacion";
         this.lista_items = new ArrayList<>();
         this.total_igv = 0.0;
         this.total_factura = 0.0;
@@ -47,11 +47,11 @@ public class Factura {
     }
 
     public String getRuc_de_cliente() {
-        return ruc_de_cliente;
+        return ruc_cliente;
     }
 
     public void setRuc_de_cliente(String rucDeCliente) {
-        this.ruc_de_cliente = rucDeCliente;
+        this.ruc_cliente = rucDeCliente;
     }
 
     public ArrayList<ItemCalculado> getLista_items() {
@@ -75,7 +75,7 @@ public class Factura {
 
     @Override
     public String toString() {
-        return "Factura{" + "numeroDeFactura=" + numero_factura + ", codigoDeCliente=" + codigo_cliente + ", nombreDeCliente=" + nombre_cliente + ", rucDeCliente=" + ruc_de_cliente + ", items=" + lista_items + ", totalIGV=" + total_igv + ", totalFactura=" + total_factura + '}';
+        return "Factura{" + "numeroDeFactura=" + numero_factura + ", codigoDeCliente=" + codigo_cliente + ", nombreDeCliente=" + nombre_cliente + ", rucDeCliente=" + ruc_cliente + ", items=" + lista_items + ", totalIGV=" + total_igv + ", totalFactura=" + total_factura + '}';
     }
 
     private double calcularTotalItems() {
