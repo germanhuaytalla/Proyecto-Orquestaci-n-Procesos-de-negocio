@@ -53,4 +53,10 @@ public class ItemCalculado {
     public double getSubTotal() {
         return subTotal;
     }
+
+    @Override
+    public String toString() {
+        return "ItemCalculado [codigo=" + codigo + ", descripcion=" + descripcion + ", cantidad=" + cantidad
+                + ", precioUnitario=" + precioUnitario + ", subTotal=" + subTotal + "]";
+    }
 }

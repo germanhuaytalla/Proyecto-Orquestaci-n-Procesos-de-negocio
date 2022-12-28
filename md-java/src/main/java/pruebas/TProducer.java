@@ -15,6 +15,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+import org.json.JSONObject;
 
 import com.google.gson.Gson;
 

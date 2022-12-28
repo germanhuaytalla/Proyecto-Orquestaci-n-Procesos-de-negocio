@@ -1,7 +1,10 @@
 package fisiutiles.facturacion;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -11,6 +14,9 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
 
 public class Consumidor implements Runnable {
 
@@ -33,7 +39,7 @@ public class Consumidor implements Runnable {
             try ( Connection con = cf.createConnection()) {
                 con.start();
 
-                Session ssn = con.createSession(Session.AUTO_ACKNOWLEDGE);
+                Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
                 Destination dtn = ssn.createQueue(topic_from);
 
@@ -41,19 +47,22 @@ public class Consumidor implements Runnable {
 
                 Message msg = mc.receive();
 
-                System.out.println(msg);
-
                 String json_msg = null;
 
-                /*if (msg instanceof TextMessage txt_msg) {
-                    System.out.println("ENTRAAAAAAAAAAAA");
-                    json_msg = txt_msg.getText();
-                }*/
+                if (msg instanceof BytesMessage) {
+                    BytesMessage bytesMessage = (BytesMessage) msg;
+                    int length = (int) bytesMessage.getBodyLength();
+                    byte[] body = new byte[length];
+                    int readBytes = bytesMessage.readBytes(body);
+                    String text = new String(body, StandardCharsets.UTF_8);
+                    json_msg = text;
+                }
                 
-                //Mensaje msjf = new Gson().fromJson(json_msg, Mensaje.class);
+                JSONObject obj = new JSONObject(json_msg);
+                Mensaje msjf = new Mensaje(obj.getInt("estado"), obj.getJSONObject("contenido").toString());
                 
-                /*Orden objPedido = new Gson().fromJson(msjf.getContenido(), Orden.class);
-                                
+                // start operar
+                Orden objPedido = new Gson().fromJson(msjf.getContenido().toString(), Orden.class);
                 ArrayList<ItemCalculado> items = new ArrayList<>();
                 
                 for (Item it : objPedido.getItems()) {
@@ -69,24 +78,28 @@ public class Consumidor implements Runnable {
                 objFactura.setCodigoDeCliente(objPedido.getCodigoDeCliente());
                 objFactura.setNombreDeCliente(objPedido.getNombreDeCliente());
                 objFactura.setRucDeCliente(objPedido.getRucDeCliente());
-                objFactura.setItems(items);*/
+                objFactura.setItems(items);
                 // end operar
-/*
+
                 // start insercion en bbdd
-                ConexionMariaDB db = new ConexionMariaDB();
-                db.insert(objFactura);
+                //ConexionMariaDB db = new ConexionMariaDB();
+                //db.insert(objFactura);
                 // end insercion en bbdd
 
                 // start creando mensaje para modulo de cuentas x cobrar
+
                 Mensaje msjt = new Mensaje();
                 msjt.setEstado(0);
-                msjt.setContenido(new Gson().toJson(msjt));
+                msjt.setContenido(new Gson().toJson(objFactura));
+                System.out.println(msjt);
+                // end creando mensaje para modulo de cuentas x cobrar
 
-                // mandando mensaje al modulo de facturacion
+                // start mandando mensaje al modulo de cuentas x cobrar
                 Productor prod = new Productor();
-                prod.enviarMensajeCuentasPorCobrar(msjt);*/
+                prod.enviarMensajeCuentasPorCobrar(msjt);
+                // end mandando mensaje al modulo de cuentas x cobrar
             } catch (JMSException ex) {
-                System.out.println("Esperando...1");
+                System.out.println("Esperando...");
             }
         }
     }

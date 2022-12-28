@@ -50,4 +50,10 @@ public class Orden {
     public void setItems(ArrayList<Item> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "Orden [codigoDeCliente=" + codigoDeCliente + ", nombreDeCliente=" + nombreDeCliente + ", rucDeCliente="
+                + rucDeCliente + ", items=" + items + "]";
+    }
 }

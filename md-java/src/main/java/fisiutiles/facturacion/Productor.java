@@ -31,7 +31,7 @@ public class Productor {
 
             Session ssn = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            Destination dtn = ssn.createTopic(topic_to);
+            Destination dtn = ssn.createQueue(topic_to);
 
             MessageProducer mp = ssn.createProducer(dtn);
 
@@ -41,7 +41,7 @@ public class Productor {
 
             mp.send(tm);
         } catch (JMSException ex) {
-            Logger.getLogger(Productor.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error?");
         }
     }
 }

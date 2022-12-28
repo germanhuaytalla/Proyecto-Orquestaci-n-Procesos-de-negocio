@@ -1,5 +1,7 @@
 package fisiutiles.facturacion;
 
+import org.json.JSONObject;
+
 public class Mensaje {
  
     private int estado;
@@ -31,6 +33,6 @@ public class Mensaje {
 
     @Override
     public String toString() {
-        return "Mensaje{" + "estado=" + estado + ", contenido=" + contenido + '}';
+        return "Mensaje [estado=" + estado + ", contenido=" + contenido + "]";
     }
 }
