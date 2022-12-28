@@ -66,8 +66,9 @@ if (isset($_POST['enviar'])) {
       $conn_md = new ConnectMiddleware();
       $stomp = $conn_md->connect();
       $consumer=new Consumer();
-      $consumer->recibirMensaje(constant('TOPIC_FROM'), $stomp,'viewConfirmacion');
+      $consumer->recibirMensajeConfirmacion(constant('TOPIC_FROM'), $stomp,'viewConfirmacion');
       
+
     }
   } else {
     echo "<script>

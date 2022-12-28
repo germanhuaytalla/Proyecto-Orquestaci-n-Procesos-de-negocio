@@ -1,6 +1,5 @@
 <?php
 include_once("config.php");
-include_once("producer.php");
 include_once("consumer.php");
 include_once("modelOrders.php");
 include_once("connectMiddleware.php");
@@ -9,26 +8,12 @@ include_once("connectMiddleware.php");
 if (isset($_POST['aceptar'])) {
   $aceptar = $_POST['aceptar'];
 
-  //Enviar mensaje de "confirmación"
+  //Recibir mensaje de cuentas por cobrar
   $conn_md = new ConnectMiddleware();
   $stomp = $conn_md->connect();
-  $producer = new Producer();
+  $consumer = new Consumer();
+  $consumer->recibirMensajeCuentasPorCobrar(constant('TOPIC_FROM'), $stomp);
 
-  $array = ["estado" => 1, "contenido" => "Reserva confirmada"];
-  $mensaje = json_encode($array);
-  $producer->enviarMensaje($stomp, constant('TOPIC_TO'), $mensaje);
-
-  if (!$producer) {
-    echo "<script>
-    alert('El mensaje no se envió correctamente');
-    window.location='viewConfirmacion.php';
-    </script>";
-  } else {
-    echo "<script>
-    // alert('El mensaje se envió correctamente');
-    window.location='viewReporte.php';
-    </script>";
-  }
 }
 
 if (isset($_POST['cancelar'])) {
@@ -58,7 +43,7 @@ if (isset($_POST['cancelar'])) {
 <body>
   <section class="relative w-full">
     <form action="" method="POST" class="absolute top-64 left-[25%] right-[25%] text-center text-3xl font-semibold  bg-white text-[#0123E7] border-2 border-[#0123E7] py-8 px-2">
-      <h2>Hay stock de los productos, ¿Desea reservar el pedido?</h2>
+      <h2>¿Generar Factura de Venta?</h2>
       <div class="flex justify-center items-center gap-4 my-6">
         <input class="bg-[#0123E7] px-4 py-2 text-base text-white rounded-lg hover:scale-[0.9]" type="submit" name="aceptar" value="Aceptar">
         <input class="bg-[#0123E7] px-4 py-2 text-base text-white rounded-lg hover:scale-[0.9]" type="submit" name="cancelar" value="Cancelar">
