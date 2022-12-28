@@ -14,7 +14,7 @@ $consumer = new Consumer();
 $mensaje=$consumer->recibirMensajeCuentasPorCobrar('fisi_tiendautiles/mod_cuentas_x_cobrar', $stomp);
 
 if ($mensaje != null) {
-    echo $mensaje;
+    print_r($mensaje);
 
     echo "<script>
     alert('Mensaje recibido');

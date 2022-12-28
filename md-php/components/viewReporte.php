@@ -19,7 +19,7 @@ if (isset($_POST['aceptar'])) {
 if (isset($_POST['cancelar'])) {
 
   echo "<script>
-  alert('El mensaje no se envió correctamente');
+  alert('El mensaje se ha cancelado');
   window.location='viewCarrito.php';
   </script>";
 }
