@@ -14,12 +14,9 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-public class Consumidor implements Runnable {
+public class Consumidor {
 
     public static void main(String[] args) {
         new Consumidor().consumirMensajeAdministracionDeInventarioYReserva();
@@ -100,14 +97,9 @@ public class Consumidor implements Runnable {
                 prod.enviarMensajeCuentasPorCobrar(msjt);
                 // end mandando mensaje al modulo de cuentas x cobrar
             } catch (JMSException ex) {
-                System.out.println("Esperando...");
+                System.out.println("ERROR: " + ex.getMessage());
             }
         }
-    }
-
-    @Override
-    public void run() {
-        this.consumirMensajeAdministracionDeInventarioYReserva();
     }
 }
 
