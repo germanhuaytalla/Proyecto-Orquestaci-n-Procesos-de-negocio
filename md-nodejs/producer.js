@@ -24,11 +24,14 @@ const Stomp = require("stompjs");
 
 const sendMessage = (message, destination) => {
     const client = Stomp.overTCP("localhost", 61616);
-    
-    client.connect("admin", "admin", function(error) {
-        client.send(destination, {}, JSON.stringify(message));
+
+    client.connect("admin", "admin", function (error) {
+        message = JSON.stringify(message)
+        const messageBuffer = Buffer.from(message);
+        const messageString = messageBuffer.toString('utf8');
+        client.send(destination, {}, messageString);
         client.disconnect();
-      });
+    });
 }
 
 module.exports = {

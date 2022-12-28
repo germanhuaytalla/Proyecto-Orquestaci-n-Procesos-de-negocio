@@ -14,7 +14,7 @@ const cuentasPorCobrarSchema = new mongoose.Schema({
     codigo_cliente: String,
     nombre_cliente: String,
     ruc_cliente: String,
-    lista_items: String,
+    lista_items: Array,
     total_igv: Number,
     total_x_cobrar: Number,
     fecha_cobro: Date,
@@ -24,6 +24,8 @@ const cuentasPorCobrarSchema = new mongoose.Schema({
 const CuentasPorCobrar = mongoose.model('CuentasPorCobrar', cuentasPorCobrarSchema, 'cuentas_x_cobrar');
 
 module.exports.ejecutarAccion = (mensaje) => {
+    // mensaje = mensaje.replace(/\\/g, '');
+
     // Lógica de la acción a realizar
     console.log(`Se ha recibido el mensaje: ${mensaje} y se está realizando la acción`);
     dbConnection.connect({ host, port, name })
@@ -31,9 +33,7 @@ module.exports.ejecutarAccion = (mensaje) => {
             console.log('Conexión a la base de datos establecida con éxito.');
             cuentasPorCobrar(mensaje);
             setTimeout(function () {
-                mongoose.connection.close();
-
-                
+                mongoose.connection.close();      
             }, 2000);
 
         })
@@ -42,9 +42,12 @@ module.exports.ejecutarAccion = (mensaje) => {
 }
 
 function cuentasPorCobrar(mensaje) {
-    mensaje = JSON.parse(mensaje)
-    console.log(typeof mensaje)
 
+    mensaje = JSON.parse(mensaje)
+    
+    mensaje = JSON.parse(mensaje['contenido'])
+    console.log(mensaje)
+ 
     // Hora actual UTC-5
     const currentTime = Date.now();
     const timeInUtc5 = new Date(currentTime - 5*60*60*1000);
@@ -55,13 +58,13 @@ function cuentasPorCobrar(mensaje) {
 
     // Campos para guardar en MONGODB
     contenido = {
-        numero_factura: mensaje['contenido']['numer_factura'],
-        codigo_cliente: mensaje['contenido']['codigo_cliente'],
-        nombre_cliente: mensaje['contenido']['nombre_cliente'],
-        ruc_cliente: mensaje['contenido']['ruc_cliente'],
-        lista_items: mensaje['contenido']['lista_items'],
-        total_igv: mensaje['contenido']['total_igv'],
-        total_x_cobrar: mensaje['contenido']['total_factura'],
+        numero_factura: mensaje['numeroDeFactura'],
+        codigo_cliente: mensaje['codigoDeCliente'],
+        nombre_cliente: mensaje['nombreDeCliente'],
+        ruc_cliente: mensaje['rucDeCliente'],
+        lista_items: mensaje['items'],
+        total_igv: mensaje['totalIGV'],
+        total_x_cobrar: mensaje['totalFactura'],
         fecha_cobro: fecha_cobro,
         estado_registro: 'pendiente'
     }
