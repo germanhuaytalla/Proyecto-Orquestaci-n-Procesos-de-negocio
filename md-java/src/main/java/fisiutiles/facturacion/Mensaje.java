@@ -1,16 +1,16 @@
 package fisiutiles.facturacion;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 public class Mensaje {
  
     private int estado;
-    private String contenido;
+    private JsonObject contenido;
 
     public Mensaje() {
     }
 
-    public Mensaje(int estado, String contenido) {
+    public Mensaje(int estado, JsonObject contenido) {
         this.estado = estado;
         this.contenido = contenido;
     }
@@ -23,11 +23,11 @@ public class Mensaje {
         this.estado = estado;
     }
 
-    public String getContenido() {
+    public JsonObject getContenido() {
         return contenido;
     }
 
-    public void setContenido(String contenido) {
+    public void setContenido(JsonObject contenido) {
         this.contenido = contenido;
     }
 
